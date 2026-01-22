@@ -328,6 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     setupSearch();
     setupModal();
+    setupThemeToggle();
     updateProgressDisplay();
 });
 
@@ -623,4 +624,28 @@ function viewProgress() {
 function startPath(pathName) {
     alert(`Starting ${pathName} learning path! Navigate to the Modules section to begin.`);
     scrollToModules();
+}
+
+function setupThemeToggle() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme, themeIcon);
+
+    // Toggle theme on click
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme, themeIcon);
+    });
+}
+
+function updateThemeIcon(theme, iconElement) {
+    iconElement.textContent = theme === 'dark' ? '☀️' : '🌙';
 }
