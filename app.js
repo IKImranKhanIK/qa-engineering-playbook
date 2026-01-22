@@ -1,0 +1,626 @@
+// Data structure for modules
+const modules = [
+    {
+        id: 0,
+        title: "Introduction to QA Engineering",
+        description: "Learn what QA engineering is, career paths, and how to use this playbook effectively.",
+        lessons: 4,
+        duration: "2-3 hours",
+        tags: ["Beginner", "Career", "Overview"],
+        lessons_list: [
+            "What is QA Engineering",
+            "Software vs Hardware vs Systems QA",
+            "QA Career Paths",
+            "How to Use This Playbook"
+        ]
+    },
+    {
+        id: 1,
+        title: "QA Foundations",
+        description: "Core principles and concepts that underpin all quality engineering work.",
+        lessons: 7,
+        duration: "8-10 hours",
+        tags: ["Fundamentals", "Theory", "Essential"],
+        lessons_list: [
+            "QA vs QC vs QE",
+            "Verification vs Validation",
+            "Test Levels and Test Pyramids",
+            "Risk-Based Testing",
+            "Test Design Techniques",
+            "Severity vs Priority",
+            "Traceability and Requirements Coverage"
+        ]
+    },
+    {
+        id: 2,
+        title: "Software QA",
+        description: "Comprehensive guide to testing web, mobile, API, and database applications.",
+        lessons: 8,
+        duration: "12-15 hours",
+        tags: ["Software", "API", "Database"],
+        lessons_list: [
+            "Web Testing Strategies",
+            "API Testing",
+            "Database Testing",
+            "Microservices Testing",
+            "CI/CD Quality Gates",
+            "Exploratory Testing",
+            "Regression Strategy",
+            "Test Data Management"
+        ]
+    },
+    {
+        id: 3,
+        title: "Test Automation",
+        description: "Build scalable test automation frameworks and integrate with CI/CD pipelines.",
+        lessons: 9,
+        duration: "15-20 hours",
+        tags: ["Automation", "SDET", "Frameworks"],
+        lessons_list: [
+            "UI Automation Principles",
+            "API Automation Architecture",
+            "Test Data Management",
+            "Flaky Test Prevention",
+            "Mocking & Stubbing",
+            "CI Execution & Reporting",
+            "Framework Design Patterns",
+            "Page Object Model",
+            "Test Maintenance Strategies"
+        ]
+    },
+    {
+        id: 4,
+        title: "Performance & Reliability",
+        description: "Master load testing, observability, and reliability engineering for QA.",
+        lessons: 7,
+        duration: "10-12 hours",
+        tags: ["Performance", "SRE", "Observability"],
+        lessons_list: [
+            "Load, Stress, and Soak Testing",
+            "Observability for QA",
+            "SLO / SLA Validation",
+            "Incident Learning",
+            "Reliability Metrics",
+            "Capacity Planning",
+            "Performance Bottleneck Analysis"
+        ]
+    },
+    {
+        id: 5,
+        title: "Security & Privacy",
+        description: "QA's role in security testing, OWASP validation, and privacy compliance.",
+        lessons: 6,
+        duration: "8-10 hours",
+        tags: ["Security", "Privacy", "Compliance"],
+        lessons_list: [
+            "QA's Role in Security",
+            "OWASP Top 10 Testing",
+            "Authentication & Authorization Testing",
+            "Privacy Test Cases (GDPR)",
+            "Security Automation",
+            "Penetration Testing Basics"
+        ]
+    },
+    {
+        id: 6,
+        title: "Mobile QA",
+        description: "iOS and Android testing strategies, device fragmentation, and app store readiness.",
+        lessons: 7,
+        duration: "10-12 hours",
+        tags: ["Mobile", "iOS", "Android"],
+        lessons_list: [
+            "iOS / Android Test Strategies",
+            "Device Fragmentation",
+            "App Store Readiness",
+            "Network & Offline Testing",
+            "Mobile Automation",
+            "Performance on Mobile",
+            "Mobile Security Testing"
+        ]
+    },
+    {
+        id: 7,
+        title: "Hardware QA",
+        description: "EVT/DVT/PVT validation, environmental testing, and manufacturing quality.",
+        lessons: 9,
+        duration: "12-15 hours",
+        tags: ["Hardware", "EVT/DVT/PVT", "Manufacturing"],
+        lessons_list: [
+            "EVT, DVT, PVT Explained",
+            "Manufacturing Quality Lifecycle",
+            "Environmental Testing",
+            "Power & Battery Testing",
+            "Firmware Validation",
+            "Supplier Quality Management",
+            "Failure Analysis",
+            "8D & CAPA Process",
+            "Measurement & Uncertainty"
+        ]
+    },
+    {
+        id: 8,
+        title: "Systems Integration",
+        description: "Testing complex systems where hardware, firmware, software, and cloud converge.",
+        lessons: 7,
+        duration: "10-12 hours",
+        tags: ["Systems", "Integration", "IoT"],
+        lessons_list: [
+            "Device + App + Backend Testing",
+            "Compatibility Matrices",
+            "Firmware ↔ Software Versioning",
+            "Interoperability Testing",
+            "Field Issue Analysis",
+            "OTA Update Testing",
+            "End-to-End System Validation"
+        ]
+    },
+    {
+        id: 9,
+        title: "Release Quality",
+        description: "Go/No-Go decisions, bug triage, release readiness, and quality metrics.",
+        lessons: 6,
+        duration: "8-10 hours",
+        tags: ["Release", "Metrics", "Management"],
+        lessons_list: [
+            "Go / No-Go Criteria",
+            "Bug Triage Process",
+            "Release Readiness Reviews",
+            "Quality Metrics That Matter",
+            "Defect Prediction",
+            "Post-Release Monitoring"
+        ]
+    },
+    {
+        id: 10,
+        title: "Career & Interviews",
+        description: "Interview preparation, resume tips, and career advancement strategies.",
+        lessons: 5,
+        duration: "6-8 hours",
+        tags: ["Career", "Interview", "Growth"],
+        lessons_list: [
+            "Interview Preparation",
+            "Common QA Interview Questions",
+            "Technical Assessments",
+            "Resume & Portfolio",
+            "Career Advancement"
+        ]
+    }
+];
+
+// Templates data
+const templates = [
+    {
+        title: "Test Plan",
+        description: "Comprehensive test plan template with all sections",
+        icon: "📋",
+        file: "templates/test-plan.md"
+    },
+    {
+        title: "Test Case",
+        description: "Detailed test case template with multiple formats",
+        icon: "✅",
+        file: "templates/test-case.md"
+    },
+    {
+        title: "Bug Report",
+        description: "Production-ready bug report template",
+        icon: "🐛",
+        file: "templates/bug-report.md"
+    },
+    {
+        title: "Risk Assessment",
+        description: "Risk assessment matrix and analysis template",
+        icon: "⚠️",
+        file: "templates/risk-assessment.md"
+    },
+    {
+        title: "Traceability Matrix",
+        description: "Requirements traceability matrix template",
+        icon: "🔗",
+        file: "templates/traceability-matrix.md"
+    },
+    {
+        title: "Release Readiness",
+        description: "Go/No-Go release readiness review template",
+        icon: "🚀",
+        file: "templates/release-readiness.md"
+    },
+    {
+        title: "Hardware Validation Plan",
+        description: "EVT/DVT/PVT validation plan template",
+        icon: "🔧",
+        file: "templates/hardware-validation-plan.md"
+    },
+    {
+        title: "8D Root Cause Analysis",
+        description: "8D methodology for root cause analysis and CAPA",
+        icon: "🔍",
+        file: "templates/8d-root-cause-analysis.md"
+    }
+];
+
+// Labs data
+const labs = [
+    {
+        title: "Web Application Testing",
+        description: "Test a sample e-commerce application for functional bugs",
+        difficulty: "beginner",
+        duration: "2 hours",
+        category: "software"
+    },
+    {
+        title: "API Test Automation",
+        description: "Build automated tests for a REST API using Postman/Newman",
+        difficulty: "intermediate",
+        duration: "3 hours",
+        category: "automation"
+    },
+    {
+        title: "Performance Testing Lab",
+        description: "Load test a web application and analyze bottlenecks",
+        difficulty: "intermediate",
+        duration: "4 hours",
+        category: "software"
+    },
+    {
+        title: "Security Testing Exercise",
+        description: "Test for OWASP Top 10 vulnerabilities in a vulnerable app",
+        difficulty: "advanced",
+        duration: "4 hours",
+        category: "software"
+    },
+    {
+        title: "Mobile Testing Scenarios",
+        description: "Test mobile app across different devices and OS versions",
+        difficulty: "intermediate",
+        duration: "3 hours",
+        category: "software"
+    },
+    {
+        title: "Hardware Validation Exercise",
+        description: "Paper-based EVT validation exercise for a smart device",
+        difficulty: "intermediate",
+        duration: "2 hours",
+        category: "hardware"
+    },
+    {
+        title: "Environmental Testing Planning",
+        description: "Design environmental test plan for consumer electronics",
+        difficulty: "advanced",
+        duration: "3 hours",
+        category: "hardware"
+    },
+    {
+        title: "Root Cause Analysis (8D)",
+        description: "Conduct 8D analysis on a sample hardware failure",
+        difficulty: "intermediate",
+        duration: "2 hours",
+        category: "hardware"
+    },
+    {
+        title: "System Integration Testing",
+        description: "Test IoT device integration with mobile app and cloud",
+        difficulty: "advanced",
+        duration: "4 hours",
+        category: "systems"
+    },
+    {
+        title: "CI/CD Pipeline Integration",
+        description: "Add automated tests to a CI/CD pipeline",
+        difficulty: "intermediate",
+        duration: "3 hours",
+        category: "automation"
+    }
+];
+
+// Initialize progress from localStorage
+let progress = JSON.parse(localStorage.getItem('qaPlaybookProgress')) || {
+    modules: {},
+    lessons: {},
+    labs: {}
+};
+
+// Load modules on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadModules();
+    loadTemplates();
+    loadLabs();
+    setupNavigation();
+    setupSearch();
+    setupModal();
+    updateProgressDisplay();
+});
+
+function loadModules() {
+    const grid = document.getElementById('modulesGrid');
+    modules.forEach((module, index) => {
+        const completed = progress.modules[module.id] || 0;
+        const progressPercent = (completed / module.lessons) * 100;
+
+        const card = document.createElement('div');
+        card.className = 'module-card';
+        card.onclick = () => showModule(module);
+
+        card.innerHTML = `
+            <div class="module-header">
+                <div class="module-number">${index.toString().padStart(2, '0')}</div>
+                <div class="module-info">
+                    <h3>${module.title}</h3>
+                    <div class="module-meta">${module.lessons} lessons • ${module.duration}</div>
+                </div>
+            </div>
+            <p class="module-description">${module.description}</p>
+            <div class="module-lessons">
+                <span>📚 ${completed} / ${module.lessons} lessons completed</span>
+            </div>
+            <div class="module-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                </div>
+            </div>
+            <div class="module-tags">
+                ${module.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+function loadTemplates() {
+    const grid = document.getElementById('templatesGrid');
+    templates.forEach(template => {
+        const card = document.createElement('div');
+        card.className = 'template-card';
+
+        card.innerHTML = `
+            <div class="template-icon">${template.icon}</div>
+            <h3>${template.title}</h3>
+            <p>${template.description}</p>
+            <div class="template-actions">
+                <button class="btn btn-outline btn-small" onclick="viewTemplate('${template.file}')">View</button>
+                <button class="btn btn-primary btn-small" onclick="downloadTemplate('${template.file}')">Download</button>
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+function loadLabs() {
+    const grid = document.getElementById('labsGrid');
+    labs.forEach(lab => {
+        const card = document.createElement('div');
+        card.className = 'lab-card';
+        card.onclick = () => showLab(lab);
+
+        card.innerHTML = `
+            <span class="lab-difficulty difficulty-${lab.difficulty}">${lab.difficulty}</span>
+            <h3>${lab.title}</h3>
+            <p>${lab.description}</p>
+            <div class="lab-meta">
+                <span>⏱️ ${lab.duration}</span>
+                <span>📁 ${lab.category}</span>
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+function setupNavigation() {
+    const links = document.querySelectorAll('.nav-link');
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            links.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            const target = link.getAttribute('href').slice(1);
+            if (target === 'progress') {
+                document.getElementById('progress').style.display = 'block';
+                scrollToSection('progress');
+            } else {
+                document.getElementById('progress').style.display = 'none';
+                scrollToSection(target);
+            }
+        });
+    });
+}
+
+function setupSearch() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        filterContent(query);
+    });
+}
+
+function filterContent(query) {
+    if (!query) {
+        document.querySelectorAll('.module-card, .template-card, .lab-card').forEach(card => {
+            card.style.display = 'block';
+        });
+        return;
+    }
+
+    document.querySelectorAll('.module-card, .template-card, .lab-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(query) ? 'block' : 'none';
+    });
+}
+
+function setupModal() {
+    const modal = document.getElementById('contentModal');
+    const span = document.getElementsByClassName('close')[0];
+
+    span.onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    window.onclick = (event) => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
+}
+
+function showModule(module) {
+    const modal = document.getElementById('contentModal');
+    const modalBody = document.getElementById('modalBody');
+
+    modalBody.innerHTML = `
+        <h1>${module.title}</h1>
+        <p>${module.description}</p>
+        <h3>Lessons (${module.lessons})</h3>
+        <ul>
+            ${module.lessons_list.map((lesson, i) => `
+                <li style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                    <span>${i + 1}. ${lesson}</span>
+                    <button class="btn btn-outline btn-small" onclick="markLessonComplete(${module.id}, ${i})">
+                        ${progress.lessons[`${module.id}-${i}`] ? '✅ Completed' : 'Mark Complete'}
+                    </button>
+                </li>
+            `).join('')}
+        </ul>
+        <div style="margin-top: 2rem;">
+            <p><strong>Duration:</strong> ${module.duration}</p>
+            <p><strong>Tags:</strong> ${module.tags.join(', ')}</p>
+        </div>
+    `;
+
+    modal.style.display = 'block';
+}
+
+function markLessonComplete(moduleId, lessonId) {
+    const lessonKey = `${moduleId}-${lessonId}`;
+    progress.lessons[lessonKey] = true;
+
+    // Update module progress
+    const module = modules.find(m => m.id === moduleId);
+    const completedLessons = Object.keys(progress.lessons).filter(key =>
+        key.startsWith(`${moduleId}-`) && progress.lessons[key]
+    ).length;
+
+    progress.modules[moduleId] = completedLessons;
+
+    saveProgress();
+
+    // Refresh display
+    document.getElementById('modulesGrid').innerHTML = '';
+    loadModules();
+    showModule(module);
+    updateProgressDisplay();
+}
+
+function showLab(lab) {
+    const modal = document.getElementById('contentModal');
+    const modalBody = document.getElementById('modalBody');
+
+    modalBody.innerHTML = `
+        <h1>${lab.title}</h1>
+        <span class="lab-difficulty difficulty-${lab.difficulty}" style="margin: 1rem 0; display: inline-block;">${lab.difficulty}</span>
+        <p>${lab.description}</p>
+        <h3>Details</h3>
+        <p><strong>Duration:</strong> ${lab.duration}</p>
+        <p><strong>Category:</strong> ${lab.category}</p>
+        <p><strong>Prerequisites:</strong> Complete relevant module lessons first</p>
+        <div style="margin-top: 2rem;">
+            <button class="btn btn-primary" onclick="markLabComplete('${lab.title}')">
+                ${progress.labs[lab.title] ? '✅ Completed' : 'Mark as Complete'}
+            </button>
+        </div>
+    `;
+
+    modal.style.display = 'block';
+}
+
+function markLabComplete(labTitle) {
+    progress.labs[labTitle] = true;
+    saveProgress();
+    updateProgressDisplay();
+    showLab(labs.find(l => l.title === labTitle));
+}
+
+async function viewTemplate(file) {
+    try {
+        const response = await fetch(file);
+        const content = await response.text();
+
+        const modal = document.getElementById('contentModal');
+        const modalBody = document.getElementById('modalBody');
+
+        // Simple markdown-to-HTML conversion
+        modalBody.innerHTML = convertMarkdownToHTML(content);
+        modal.style.display = 'block';
+    } catch (error) {
+        alert('Template file not found. Please ensure templates are in the correct location.');
+    }
+}
+
+function convertMarkdownToHTML(markdown) {
+    // Simple markdown conversion (in production, use a library like marked.js)
+    return markdown
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\*(.*)\*/gim, '<em>$1</em>')
+        .replace(/\n/gim, '<br>');
+}
+
+function downloadTemplate(file) {
+    window.open(file, '_blank');
+}
+
+function saveProgress() {
+    localStorage.setItem('qaPlaybookProgress', JSON.stringify(progress));
+}
+
+function updateProgressDisplay() {
+    const totalModules = modules.length;
+    const completedModules = Object.values(progress.modules).filter(count => count > 0).length;
+    const modulePercent = (completedModules / totalModules) * 100;
+
+    const totalLessons = modules.reduce((sum, m) => sum + m.lessons, 0);
+    const completedLessons = Object.values(progress.lessons).filter(Boolean).length;
+    const lessonPercent = (completedLessons / totalLessons) * 100;
+
+    const totalLabs = labs.length;
+    const completedLabs = Object.values(progress.labs).filter(Boolean).length;
+    const labPercent = (completedLabs / totalLabs) * 100;
+
+    document.getElementById('moduleProgress').style.width = `${modulePercent}%`;
+    document.getElementById('completedModules').textContent = completedModules;
+
+    document.getElementById('lessonProgress').style.width = `${lessonPercent}%`;
+    document.getElementById('completedLessons').textContent = completedLessons;
+
+    document.getElementById('labProgress').style.width = `${labPercent}%`;
+    document.getElementById('completedLabs').textContent = completedLabs;
+}
+
+function scrollToModules() {
+    scrollToSection('modules');
+}
+
+function scrollToSection(id) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function viewProgress() {
+    document.getElementById('progress').style.display = 'block';
+    scrollToSection('progress');
+
+    // Update active nav
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelector('a[href="#progress"]').classList.add('active');
+}
+
+function startPath(pathName) {
+    alert(`Starting ${pathName} learning path! Navigate to the Modules section to begin.`);
+    scrollToModules();
+}

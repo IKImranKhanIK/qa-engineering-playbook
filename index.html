@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Engineering Playbook</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">QA</span>
+                <span class="brand-text">Engineering Playbook</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#modules" class="nav-link">Modules</a>
+                <a href="#templates" class="nav-link">Templates</a>
+                <a href="#labs" class="nav-link">Labs</a>
+                <a href="#progress" class="nav-link">Progress</a>
+            </div>
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="Search playbook..." />
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Master Quality Engineering</h1>
+            <p class="hero-subtitle">A comprehensive, production-grade guide to QA covering software, hardware, and systems testing</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Modules</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Lessons</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Templates</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">Labs</div>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <button class="btn btn-primary" onclick="scrollToModules()">Start Learning</button>
+                <button class="btn btn-secondary" onclick="viewProgress()">Track Progress</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Paths -->
+    <section class="learning-paths">
+        <div class="container">
+            <h2 class="section-title">Choose Your Learning Path</h2>
+            <div class="paths-grid">
+                <div class="path-card">
+                    <div class="path-icon">🎯</div>
+                    <h3>Beginner to Junior QA</h3>
+                    <p>3-6 months • Start from fundamentals</p>
+                    <ul class="path-modules">
+                        <li>Introduction to QA</li>
+                        <li>QA Foundations</li>
+                        <li>Software QA Basics</li>
+                        <li>Test Automation</li>
+                    </ul>
+                    <button class="btn btn-outline" onclick="startPath('beginner')">Start Path</button>
+                </div>
+                <div class="path-card">
+                    <div class="path-icon">🚀</div>
+                    <h3>Junior to Mid-Level</h3>
+                    <p>6-12 months • Level up your skills</p>
+                    <ul class="path-modules">
+                        <li>Advanced Automation</li>
+                        <li>Performance Testing</li>
+                        <li>Security & Privacy</li>
+                        <li>Mobile QA</li>
+                    </ul>
+                    <button class="btn btn-outline" onclick="startPath('intermediate')">Start Path</button>
+                </div>
+                <div class="path-card">
+                    <div class="path-icon">⚡</div>
+                    <h3>Hardware QA Focus</h3>
+                    <p>6-12 months • Physical product validation</p>
+                    <ul class="path-modules">
+                        <li>EVT/DVT/PVT</li>
+                        <li>Environmental Testing</li>
+                        <li>Failure Analysis</li>
+                        <li>Manufacturing Quality</li>
+                    </ul>
+                    <button class="btn btn-outline" onclick="startPath('hardware')">Start Path</button>
+                </div>
+                <div class="path-card">
+                    <div class="path-icon">💻</div>
+                    <h3>SDET/Automation</h3>
+                    <p>6-12 months • Build test infrastructure</p>
+                    <ul class="path-modules">
+                        <li>Test Automation Architecture</li>
+                        <li>CI/CD Integration</li>
+                        <li>Framework Design</li>
+                        <li>Performance & Security</li>
+                    </ul>
+                    <button class="btn btn-outline" onclick="startPath('sdet')">Start Path</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section id="modules" class="modules-section">
+        <div class="container">
+            <h2 class="section-title">Curriculum Modules</h2>
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Modules will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Section -->
+    <section id="templates" class="templates-section">
+        <div class="container">
+            <h2 class="section-title">Production-Ready Templates</h2>
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Templates will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Labs Section -->
+    <section id="labs" class="labs-section">
+        <div class="container">
+            <h2 class="section-title">Hands-On Labs</h2>
+            <div class="labs-grid" id="labsGrid">
+                <!-- Labs will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section id="progress" class="progress-section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Your Progress</h2>
+            <div class="progress-stats">
+                <div class="progress-card">
+                    <h3>Modules Completed</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="moduleProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text"><span id="completedModules">0</span> / 10 modules</p>
+                </div>
+                <div class="progress-card">
+                    <h3>Lessons Completed</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="lessonProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text"><span id="completedLessons">0</span> / 50+ lessons</p>
+                </div>
+                <div class="progress-card">
+                    <h3>Labs Completed</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="labProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text"><span id="completedLabs">0</span> / 20+ labs</p>
+                </div>
+            </div>
+            <div class="completed-items" id="completedItems">
+                <!-- Completed items will be listed here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>QA Engineering Playbook</h4>
+                    <p>Master quality engineering from beginner to senior level</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="#modules">Modules</a>
+                    <a href="#templates">Templates</a>
+                    <a href="#labs">Labs</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <a href="CONTRIBUTING.md">Contribute</a>
+                    <a href="ROADMAP.md">Roadmap</a>
+                    <a href="LICENSE">License</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 QA Engineering Playbook. Licensed under MIT.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Content -->
+    <div id="contentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
