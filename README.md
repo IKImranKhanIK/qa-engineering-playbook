@@ -1,183 +1,189 @@
 # QA Engineering Playbook
 
-A comprehensive, production-grade guide to Quality Engineering covering software, hardware, and systems testing.
+A comprehensive, production-ready guide for Quality Assurance engineers covering software testing, test automation, hardware QA, performance & reliability, security & privacy, and mobile testing.
 
-## Overview
+## 🚀 Live Site
 
-This repository is a complete curriculum for Quality Engineering, designed for:
+Visit the playbook: [https://qa-engineering-playbook.vercel.app](https://qa-engineering-playbook.vercel.app) *(will be live after deployment)*
 
-- Beginners entering QA roles
-- Experienced testers transitioning to QA Engineer / SDET positions
-- Systems and hardware QA engineers
-- Engineering teams building quality programs
+## 📚 Module Overview
 
-This is not a collection of blog posts. This is a hands-on engineering playbook with real templates, labs, and workflows used in production environments.
+### 1. Introduction to QA Engineering (4 lessons)
+- QA fundamentals, career paths, and industry overview
 
-## What You'll Learn
+### 2. Software QA (6 lessons)
+- Web testing strategies
+- Database testing
+- Microservices testing
+- Exploratory testing
+- Regression strategies
+- Test data management
 
-### Software Quality
-- Web, API, database, and microservices testing
-- Test design techniques and risk-based testing
-- CI/CD quality gates and regression strategies
-- Exploratory testing methodologies
+### 3. Test Automation (8 lessons)
+- Automation strategy and ROI
+- UI automation (Playwright)
+- API automation architecture
+- Framework design patterns
+- Page Object Model
+- Flaky test prevention
+- CI/CD integration
+- Reporting and analytics
 
-### Test Automation
-- UI and API automation architecture
-- Test data management and environment strategies
-- Flaky test prevention and debugging
-- CI execution, reporting, and maintenance
-
-### Performance & Reliability
+### 4. Performance & Reliability (7 lessons)
 - Load, stress, and soak testing
-- Observability for QA engineers
+- Observability (Prometheus, Grafana, Jaeger)
 - SLO/SLA validation
-- Reliability metrics and incident analysis
+- Incident learning and postmortems
+- Reliability metrics (Four Golden Signals)
+- Capacity planning
+- Performance bottleneck analysis
 
-### Security & Privacy
-- QA's role in security validation
-- OWASP-based testing approaches
-- Authentication and authorization testing
-- Privacy test case design
+### 5. Security & Privacy (6 lessons)
+- QA's role in security
+- OWASP Top 10 testing
+- Authentication & authorization testing
+- GDPR compliance
+- Security automation
+- Penetration testing basics
 
-### Mobile QA
-- iOS and Android testing strategies
-- Device fragmentation handling
-- App store readiness validation
+### 6. Mobile QA (7 lessons)
+- iOS/Android test strategies
+- Device fragmentation
+- App store readiness
 - Network and offline testing
+- Mobile automation
+- Mobile performance
+- Mobile security
 
-### Hardware QA
-- EVT/DVT/PVT validation phases
-- Manufacturing quality lifecycle
-- Environmental and stress testing
-- Firmware validation and supplier quality
-- Failure analysis and 8D/CAPA processes
+### 7. Hardware QA (5 lessons)
+- Manufacturing quality lifecycle (EVT/DVT/PVT)
+- Environmental testing
+- Power and battery testing
+- Firmware validation
+- Supplier quality management
+- Failure analysis
+- Measurement uncertainty
 
-### Systems & Integration
-- Device + app + backend testing
-- Compatibility matrices and versioning
-- Interoperability testing
-- Field issue analysis
+### 8-10. Additional Modules
+- Systems Integration
+- Release Quality
+- Career & Interviews
 
-### Release Quality
-- Go/No-Go decision frameworks
-- Bug triage and prioritization
-- Release readiness reviews
-- Quality metrics that matter
+**Total: 40+ comprehensive lessons with real-world examples, code samples, and hands-on exercises.**
 
-## 🚀 Quick Start
+---
 
-### Option 1: Open Directly
-Simply open `index.html` in your web browser. No server required!
+## 🛠️ Tech Stack
 
-### Option 2: Local Server (Recommended)
+- **Frontend:** Vanilla JavaScript, HTML5, CSS3
+- **Styling:** CSS Grid, Flexbox, CSS Custom Properties
+- **Features:** Dark mode, search, progress tracking
+- **Deployment:** Vercel
+
+---
+
+## 🚢 Deploy to Vercel
+
+### One-Click Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/IKImranKhanIK/qa-engineering-playbook)
+
+### Manual Deployment
+
+1. Fork this repository
+2. Sign up for [Vercel](https://vercel.com)
+3. Import your GitHub repository
+4. Vercel will auto-detect the configuration
+5. Click "Deploy"
+
+### Local Development
+
 ```bash
-# Using Python
+# Clone the repository
+git clone https://github.com/IKImranKhanIK/qa-engineering-playbook.git
+cd qa-engineering-playbook
+
+# Open in browser (no build step required)
+open index.html
+
+# Or use a local server
 python3 -m http.server 8000
-# Then visit http://localhost:8000
-
-# Using Node.js
-npx http-server .
-
-# Using VS Code
-Install "Live Server" extension and click "Go Live"
+# Visit http://localhost:8000
 ```
 
-### Option 3: Deploy Online
-Deploy to GitHub Pages, Netlify, or Vercel for free hosting.
+---
 
-## Repository Structure
+## 📖 Content Highlights
 
-```
-qa-engineering-playbook/
-├── index.html         # Main web application
-├── styles.css         # Responsive styling
-├── app.js             # Interactive functionality
-├── docs/              # Comprehensive lessons organized by topic
-├── labs/              # Hands-on exercises and scenarios
-├── templates/         # Production-ready test artifacts
-├── examples/          # Sample test suites and reports
-└── tools/             # Automation starters and CI/CD configs
-```
+### Real-World Examples
+- E-commerce checkout flow testing
+- Database N+1 query optimization
+- OAuth 2.0 security validation
+- Load testing with k6
+- Blameless postmortems
+- GDPR compliance testing
 
-## Getting Started
+### Code Samples
+- **JavaScript/Node.js:** API tests, Playwright automation, k6 load tests
+- **Python:** Test fixtures, data builders
+- **SQL:** Database testing, query optimization
+- **C:** Firmware validation, embedded testing
+- **YAML:** CI/CD pipelines (GitHub Actions)
+- **Prometheus/PromQL:** SLO monitoring
 
-### For Beginners
-Start with the foundation modules:
-1. [Introduction to QA Engineering](docs/00-introduction/)
-2. [QA Foundations](docs/01-qa-foundations/)
-3. [Software QA Basics](docs/02-software-qa/)
+### Industry Standards
+- ISO 9001, IATF 16949, FDA 21 CFR Part 820
+- OWASP Top 10
+- WCAG 2.1
+- GDPR
+- Google SRE practices
 
-### For Experienced QA
-Jump to advanced topics:
-- [Test Automation Architecture](docs/03-test-automation/)
-- [Performance & Reliability](docs/04-performance-reliability/)
-- [Hardware QA](docs/07-hardware-qa/)
-- [Systems Integration](docs/08-systems-integration/)
+---
 
-### For Interview Prep
-Review:
-- [Career & Interviews](docs/10-career-interviews/)
-- [Glossary](docs/glossary.md)
-- Sample test plans in [templates/](templates/)
+## 🎯 Who Is This For?
 
-## Using This Repository
+- **QA Engineers:** Skill up across all testing domains
+- **SDETs:** Master test automation and CI/CD
+- **Junior Testers:** Learn industry best practices
+- **Senior Engineers:** Reference guide for complex topics
+- **Engineering Managers:** Understand QA best practices
 
-### Templates
-Production-ready templates for:
-- Test plans and test cases
-- Bug reports and risk assessments
-- Traceability matrices
-- Release readiness reviews
-- Hardware validation plans
-- Root cause analysis (8D)
+---
 
-Find them in [templates/](templates/)
+## 🤝 Contributing
 
-### Labs
-Hands-on exercises organized by domain:
-- Software testing scenarios
-- Automation challenges
-- Hardware validation exercises (paper-based, no equipment required)
-- Systems integration scenarios
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-Find them in [labs/](labs/)
+---
 
-### Examples
-Real-world examples of:
-- Test suite structures
-- Bug reports with severity/priority analysis
-- Hardware validation reports
+## 📄 License
 
-Find them in [examples/](examples/)
+MIT License - see LICENSE file for details
 
-## Learning Path
+---
 
-```
-Beginner → Intermediate → Advanced → Senior
+## 🙏 Acknowledgments
 
-Week 1-2:   QA Foundations + Software QA basics
-Week 3-4:   Test Automation fundamentals
-Week 5-6:   Mobile QA or Hardware QA (choose your track)
-Week 7-8:   Performance, Security, Systems Integration
-Week 9-10:  Release Quality + Career preparation
-```
+Built with insights from:
+- Google SRE Book
+- OWASP Testing Guide
+- Test Automation University
+- ISO/IATF/FDA standards
+- Real-world QA experience
 
-## Contributing
+---
 
-We welcome contributions from QA professionals. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+## 📬 Contact
 
-## License
+Questions or feedback? Open an issue on GitHub!
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+**Created by:** Imran Khan  
+**Co-Authored-By:** Claude Sonnet 4.5 <noreply@anthropic.com>
 
-## Code of Conduct
+---
 
-This project adheres to a Code of Conduct that all contributors must follow. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
-
-## Roadmap
-
-See [ROADMAP.md](ROADMAP.md) for planned features and content expansion.
-
-## About
-
-Created to fill the gap between basic QA tutorials and real-world engineering practices. This playbook reflects methodologies used at top technology companies across software, hardware, and systems quality disciplines.
+**⭐ Star this repo if you find it helpful!**
