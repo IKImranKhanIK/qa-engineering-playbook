@@ -1,4 +1,5 @@
 // Data structure for modules
+// Version: 2.0 - Added lesson content loading
 const modules = [
     {
         id: 0,
@@ -473,15 +474,17 @@ function showModule(module) {
         <h3>Lessons (${module.lessons})</h3>
         <ul style="list-style: none; padding: 0;">
             ${module.lessons_list.map((lesson, i) => {
-                const lessonTitle = typeof lesson === 'string' ? lesson : lesson.title;
-                const lessonFile = typeof lesson === 'object' ? lesson.file : null;
+                // Handle both string and object lesson formats
+                const isObject = lesson && typeof lesson === 'object' && !Array.isArray(lesson);
+                const lessonTitle = isObject ? lesson.title : lesson;
+                const lessonFile = isObject && lesson.file ? lesson.file : null;
                 const lessonKey = `${module.id}-${i}`;
                 const isCompleted = progress.lessons[lessonKey];
 
                 return `
                     <li style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
                         <span style="cursor: ${lessonFile ? 'pointer' : 'default'}; flex: 1; ${lessonFile ? 'color: #3b82f6; text-decoration: underline;' : ''}"
-                              ${lessonFile ? `onclick="showLesson('${lessonFile}', '${lessonTitle.replace(/'/g, "\\'")}', ${module.id}, ${i})"` : ''}>
+                              ${lessonFile ? `onclick="showLesson('${lessonFile}', '${encodeURIComponent(lessonTitle)}', ${module.id}, ${i})"` : ''}>
                             ${i + 1}. ${lessonTitle} ${isCompleted ? '✅' : ''}
                         </span>
                         ${lessonFile ? `
@@ -502,7 +505,8 @@ function showModule(module) {
     modal.style.display = 'block';
 }
 
-async function showLesson(file, title, moduleId, lessonId) {
+async function showLesson(file, encodedTitle, moduleId, lessonId) {
+    const title = decodeURIComponent(encodedTitle);
     try {
         const response = await fetch(file);
         if (!response.ok) {
@@ -532,7 +536,7 @@ async function showLesson(file, title, moduleId, lessonId) {
         modal.style.display = 'block';
     } catch (error) {
         console.error('Error loading lesson:', error);
-        alert('Failed to load lesson content. Please check if the file exists: ' + file);
+        alert('Failed to load lesson content. File: ' + file + '\nError: ' + error.message);
     }
 }
 
