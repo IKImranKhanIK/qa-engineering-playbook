@@ -9,10 +9,10 @@ const modules = [
         duration: "2-3 hours",
         tags: ["Beginner", "Career", "Overview"],
         lessons_list: [
-            "What is QA Engineering",
-            "Software vs Hardware vs Systems QA",
-            "QA Career Paths",
-            "How to Use This Playbook"
+            { title: "What is QA Engineering", file: "docs/00-introduction/01-what-is-qa-engineering.md" },
+            { title: "Software vs Hardware vs Systems QA", file: "docs/00-introduction/02-software-hardware-systems-qa.md" },
+            { title: "QA Career Paths", file: "docs/00-introduction/03-qa-career-paths.md" },
+            { title: "How to Use This Playbook", file: "docs/00-introduction/04-how-to-use-this-playbook.md" }
         ]
     },
     {
@@ -23,13 +23,13 @@ const modules = [
         duration: "8-10 hours",
         tags: ["Fundamentals", "Theory", "Essential"],
         lessons_list: [
-            "QA vs QC vs QE",
-            "Verification vs Validation",
-            "Test Levels and Test Pyramids",
-            "Risk-Based Testing",
-            "Test Design Techniques",
-            "Severity vs Priority",
-            "Traceability and Requirements Coverage"
+            { title: "QA vs QC vs QE", file: "docs/01-qa-foundations/01-qa-vs-qc-vs-qe.md" },
+            { title: "Verification vs Validation", file: "docs/01-qa-foundations/02-verification-vs-validation.md" },
+            { title: "Test Levels and Test Pyramids", file: "docs/01-qa-foundations/03-test-levels-and-pyramids.md" },
+            { title: "Risk-Based Testing", file: "docs/01-qa-foundations/04-risk-based-testing.md" },
+            { title: "Test Design Techniques", file: "docs/01-qa-foundations/05-test-design-techniques.md" },
+            { title: "Severity vs Priority", file: "docs/01-qa-foundations/06-severity-vs-priority.md" },
+            { title: "Traceability and Requirements Coverage", file: "docs/01-qa-foundations/07-traceability-requirements-coverage.md" }
         ]
     },
     {
