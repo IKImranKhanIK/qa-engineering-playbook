@@ -39,33 +39,32 @@ const modules = [
         duration: "12-15 hours",
         tags: ["Software", "API", "Database"],
         lessons_list: [
-            "Web Testing Strategies",
-            "API Testing",
-            "Database Testing",
-            "Microservices Testing",
-            "CI/CD Quality Gates",
-            "Exploratory Testing",
-            "Regression Strategy",
-            "Test Data Management"
+            { title: "Web Testing Strategies", file: "docs/02-software-qa/01-web-testing-strategies.md" },
+            { title: "API Testing", file: "docs/02-software-qa/02-api-testing.md" },
+            { title: "Database Testing", file: "docs/02-software-qa/03-database-testing.md" },
+            { title: "Microservices Testing", file: "docs/02-software-qa/04-microservices-testing.md" },
+            { title: "CI/CD Quality Gates", file: "docs/02-software-qa/05-cicd-quality-gates.md" },
+            { title: "Exploratory Testing", file: "docs/02-software-qa/06-exploratory-testing.md" },
+            { title: "Regression Strategy", file: "docs/02-software-qa/07-regression-strategy.md" },
+            { title: "Test Data Management", file: "docs/02-software-qa/08-test-data-management.md" }
         ]
     },
     {
         id: 3,
         title: "Test Automation",
         description: "Build scalable test automation frameworks and integrate with CI/CD pipelines.",
-        lessons: 9,
+        lessons: 8,
         duration: "15-20 hours",
         tags: ["Automation", "SDET", "Frameworks"],
         lessons_list: [
-            "UI Automation Principles",
-            "API Automation Architecture",
-            "Test Data Management",
-            "Flaky Test Prevention",
-            "Mocking & Stubbing",
-            "CI Execution & Reporting",
-            "Framework Design Patterns",
-            "Page Object Model",
-            "Test Maintenance Strategies"
+            { title: "UI Automation Principles", file: "docs/03-test-automation/02-ui-automation-principles.md" },
+            { title: "API Automation Architecture", file: "docs/03-test-automation/03-api-automation-architecture.md" },
+            { title: "Framework Design Patterns", file: "docs/03-test-automation/04-framework-design-patterns.md" },
+            { title: "Page Object Model", file: "docs/03-test-automation/05-page-object-model.md" },
+            { title: "Flaky Test Prevention", file: "docs/03-test-automation/07-flaky-test-prevention.md" },
+            { title: "CI/CD Integration", file: "docs/03-test-automation/08-cicd-integration.md" },
+            { title: "Reporting & Analytics", file: "docs/03-test-automation/09-reporting-analytics.md" },
+            { title: "Test Maintenance Strategies", file: "docs/03-test-automation/09-reporting-analytics.md" }
         ]
     },
     {
@@ -76,13 +75,13 @@ const modules = [
         duration: "10-12 hours",
         tags: ["Performance", "SRE", "Observability"],
         lessons_list: [
-            "Load, Stress, and Soak Testing",
-            "Observability for QA",
-            "SLO / SLA Validation",
-            "Incident Learning",
-            "Reliability Metrics",
-            "Capacity Planning",
-            "Performance Bottleneck Analysis"
+            { title: "Load, Stress, and Soak Testing", file: "docs/04-performance-reliability/01-load-stress-soak-testing.md" },
+            { title: "Observability for QA", file: "docs/04-performance-reliability/02-observability-for-qa.md" },
+            { title: "SLO / SLA Validation", file: "docs/04-performance-reliability/03-slo-sla-validation.md" },
+            { title: "Incident Learning", file: "docs/04-performance-reliability/04-incident-learning.md" },
+            { title: "Reliability Metrics", file: "docs/04-performance-reliability/05-reliability-metrics.md" },
+            { title: "Capacity Planning", file: "docs/04-performance-reliability/06-capacity-planning.md" },
+            { title: "Performance Bottleneck Analysis", file: "docs/04-performance-reliability/07-performance-bottleneck-analysis.md" }
         ]
     },
     {
@@ -93,12 +92,12 @@ const modules = [
         duration: "8-10 hours",
         tags: ["Security", "Privacy", "Compliance"],
         lessons_list: [
-            "QA's Role in Security",
-            "OWASP Top 10 Testing",
-            "Authentication & Authorization Testing",
-            "Privacy Test Cases (GDPR)",
-            "Security Automation",
-            "Penetration Testing Basics"
+            { title: "QA's Role in Security", file: "docs/05-security-privacy/01-qa-role-in-security.md" },
+            { title: "OWASP Top 10 Testing", file: "docs/05-security-privacy/02-owasp-top-10-testing.md" },
+            { title: "Authentication & Authorization Testing", file: "docs/05-security-privacy/03-authentication-authorization-testing.md" },
+            { title: "Privacy Test Cases (GDPR)", file: "docs/05-security-privacy/04-privacy-test-cases-gdpr.md" },
+            { title: "Security Automation", file: "docs/05-security-privacy/05-security-automation.md" },
+            { title: "Penetration Testing Basics", file: "docs/05-security-privacy/06-penetration-testing-basics.md" }
         ]
     },
     {
@@ -109,32 +108,30 @@ const modules = [
         duration: "10-12 hours",
         tags: ["Mobile", "iOS", "Android"],
         lessons_list: [
-            "iOS / Android Test Strategies",
-            "Device Fragmentation",
-            "App Store Readiness",
-            "Network & Offline Testing",
-            "Mobile Automation",
-            "Performance on Mobile",
-            "Mobile Security Testing"
+            { title: "iOS / Android Test Strategies", file: "docs/06-mobile-qa/01-ios-android-strategies.md" },
+            { title: "Device Fragmentation", file: "docs/06-mobile-qa/02-device-fragmentation.md" },
+            { title: "App Store Readiness", file: "docs/06-mobile-qa/03-app-store-readiness.md" },
+            { title: "Network & Offline Testing", file: "docs/06-mobile-qa/04-network-offline-testing.md" },
+            { title: "Mobile Automation", file: "docs/06-mobile-qa/05-mobile-automation.md" },
+            { title: "Performance on Mobile", file: "docs/06-mobile-qa/06-performance-mobile.md" },
+            { title: "Mobile Security Testing", file: "docs/06-mobile-qa/07-mobile-security.md" }
         ]
     },
     {
         id: 7,
         title: "Hardware QA",
         description: "EVT/DVT/PVT validation, environmental testing, and manufacturing quality.",
-        lessons: 9,
+        lessons: 7,
         duration: "12-15 hours",
         tags: ["Hardware", "EVT/DVT/PVT", "Manufacturing"],
         lessons_list: [
-            "EVT, DVT, PVT Explained",
-            "Manufacturing Quality Lifecycle",
-            "Environmental Testing",
-            "Power & Battery Testing",
-            "Firmware Validation",
-            "Supplier Quality Management",
-            "Failure Analysis",
-            "8D & CAPA Process",
-            "Measurement & Uncertainty"
+            { title: "Manufacturing Quality Lifecycle", file: "docs/07-hardware-qa/02-manufacturing-quality-lifecycle.md" },
+            { title: "Environmental Testing", file: "docs/07-hardware-qa/03-environmental-testing.md" },
+            { title: "Power & Battery Testing", file: "docs/07-hardware-qa/04-power-battery-testing.md" },
+            { title: "Firmware Validation", file: "docs/07-hardware-qa/05-firmware-validation.md" },
+            { title: "Supplier Quality Management", file: "docs/07-hardware-qa/06-supplier-quality.md" },
+            { title: "Failure Analysis", file: "docs/07-hardware-qa/07-failure-analysis.md" },
+            { title: "Measurement & Uncertainty", file: "docs/07-hardware-qa/09-measurement-uncertainty.md" }
         ]
     },
     {
@@ -474,15 +471,27 @@ function showModule(module) {
         <h1>${module.title}</h1>
         <p>${module.description}</p>
         <h3>Lessons (${module.lessons})</h3>
-        <ul>
-            ${module.lessons_list.map((lesson, i) => `
-                <li style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
-                    <span>${i + 1}. ${lesson}</span>
-                    <button class="btn btn-outline btn-small" onclick="markLessonComplete(${module.id}, ${i})">
-                        ${progress.lessons[`${module.id}-${i}`] ? '✅ Completed' : 'Mark Complete'}
-                    </button>
-                </li>
-            `).join('')}
+        <ul style="list-style: none; padding: 0;">
+            ${module.lessons_list.map((lesson, i) => {
+                const lessonTitle = typeof lesson === 'string' ? lesson : lesson.title;
+                const lessonFile = typeof lesson === 'object' ? lesson.file : null;
+                const lessonKey = `${module.id}-${i}`;
+                const isCompleted = progress.lessons[lessonKey];
+
+                return `
+                    <li style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="cursor: ${lessonFile ? 'pointer' : 'default'}; flex: 1; ${lessonFile ? 'color: #3b82f6; text-decoration: underline;' : ''}"
+                              ${lessonFile ? `onclick="showLesson('${lessonFile}', '${lessonTitle.replace(/'/g, "\\'")}', ${module.id}, ${i})"` : ''}>
+                            ${i + 1}. ${lessonTitle} ${isCompleted ? '✅' : ''}
+                        </span>
+                        ${lessonFile ? `
+                            <button class="btn btn-outline btn-small" onclick="markLessonComplete(${module.id}, ${i})">
+                                ${isCompleted ? 'Completed' : 'Mark Complete'}
+                            </button>
+                        ` : ''}
+                    </li>
+                `;
+            }).join('')}
         </ul>
         <div style="margin-top: 2rem;">
             <p><strong>Duration:</strong> ${module.duration}</p>
@@ -491,6 +500,40 @@ function showModule(module) {
     `;
 
     modal.style.display = 'block';
+}
+
+async function showLesson(file, title, moduleId, lessonId) {
+    try {
+        const response = await fetch(file);
+        if (!response.ok) {
+            throw new Error(`File not found: ${file}`);
+        }
+        const content = await response.text();
+
+        const modal = document.getElementById('contentModal');
+        const modalBody = document.getElementById('modalBody');
+
+        const lessonKey = `${moduleId}-${lessonId}`;
+        const isCompleted = progress.lessons[lessonKey];
+
+        // Convert markdown to HTML
+        modalBody.innerHTML = `
+            <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 1rem;">
+                <button class="btn btn-outline btn-small" onclick="showModule(modules.find(m => m.id === ${moduleId}))">
+                    ← Back to Module
+                </button>
+                <button class="btn btn-primary btn-small" onclick="markLessonComplete(${moduleId}, ${lessonId})">
+                    ${isCompleted ? '✅ Completed' : 'Mark as Complete'}
+                </button>
+            </div>
+            ${convertMarkdownToHTML(content)}
+        `;
+
+        modal.style.display = 'block';
+    } catch (error) {
+        console.error('Error loading lesson:', error);
+        alert('Failed to load lesson content. Please check if the file exists: ' + file);
+    }
 }
 
 function markLessonComplete(moduleId, lessonId) {
@@ -560,14 +603,64 @@ async function viewTemplate(file) {
 }
 
 function convertMarkdownToHTML(markdown) {
-    // Simple markdown conversion (in production, use a library like marked.js)
-    return markdown
-        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-        .replace(/\*(.*)\*/gim, '<em>$1</em>')
-        .replace(/\n/gim, '<br>');
+    // Enhanced markdown conversion
+    let html = markdown;
+
+    // Code blocks (```language ... ```)
+    html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+        return `<pre><code class="language-${lang || 'plaintext'}">${escapeHtml(code)}</code></pre>`;
+    });
+
+    // Inline code (`code`)
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Headers
+    html = html.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+    html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+    // Bold and italic
+    html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+    // Links [text](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    // Unordered lists
+    html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
+    html = html.replace(/^- (.+)$/gim, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+
+    // Line breaks
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = html.replace(/\n/g, '<br>');
+
+    // Wrap in paragraphs
+    html = '<p>' + html + '</p>';
+
+    // Clean up multiple paragraph tags
+    html = html.replace(/<p><\/p>/g, '');
+    html = html.replace(/<p>(<h[1-6]>)/g, '$1');
+    html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<pre>)/g, '$1');
+    html = html.replace(/(<\/pre>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<ul>)/g, '$1');
+    html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+
+    return html;
+}
+
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
 }
 
 function downloadTemplate(file) {
