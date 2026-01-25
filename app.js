@@ -58,14 +58,14 @@ const modules = [
         duration: "15-20 hours",
         tags: ["Automation", "SDET", "Frameworks"],
         lessons_list: [
+            { title: "Automation Strategy", file: "docs/03-test-automation/01-automation-strategy.md" },
             { title: "UI Automation Principles", file: "docs/03-test-automation/02-ui-automation-principles.md" },
             { title: "API Automation Architecture", file: "docs/03-test-automation/03-api-automation-architecture.md" },
             { title: "Framework Design Patterns", file: "docs/03-test-automation/04-framework-design-patterns.md" },
             { title: "Page Object Model", file: "docs/03-test-automation/05-page-object-model.md" },
             { title: "Flaky Test Prevention", file: "docs/03-test-automation/07-flaky-test-prevention.md" },
             { title: "CI/CD Integration", file: "docs/03-test-automation/08-cicd-integration.md" },
-            { title: "Reporting & Analytics", file: "docs/03-test-automation/09-reporting-analytics.md" },
-            { title: "Test Maintenance Strategies", file: "docs/03-test-automation/09-reporting-analytics.md" }
+            { title: "Reporting & Analytics", file: "docs/03-test-automation/09-reporting-analytics.md" }
         ]
     },
     {
@@ -122,16 +122,18 @@ const modules = [
         id: 7,
         title: "Hardware QA",
         description: "EVT/DVT/PVT validation, environmental testing, and manufacturing quality.",
-        lessons: 7,
+        lessons: 9,
         duration: "12-15 hours",
         tags: ["Hardware", "EVT/DVT/PVT", "Manufacturing"],
         lessons_list: [
+            { title: "EVT/DVT/PVT Explained", file: "docs/07-hardware-qa/01-evt-dvt-pvt-explained.md" },
             { title: "Manufacturing Quality Lifecycle", file: "docs/07-hardware-qa/02-manufacturing-quality-lifecycle.md" },
             { title: "Environmental Testing", file: "docs/07-hardware-qa/03-environmental-testing.md" },
             { title: "Power & Battery Testing", file: "docs/07-hardware-qa/04-power-battery-testing.md" },
             { title: "Firmware Validation", file: "docs/07-hardware-qa/05-firmware-validation.md" },
             { title: "Supplier Quality Management", file: "docs/07-hardware-qa/06-supplier-quality.md" },
             { title: "Failure Analysis", file: "docs/07-hardware-qa/07-failure-analysis.md" },
+            { title: "8D CAPA Process", file: "docs/07-hardware-qa/08-8d-capa-process.md" },
             { title: "Measurement & Uncertainty", file: "docs/07-hardware-qa/09-measurement-uncertainty.md" }
         ]
     },
