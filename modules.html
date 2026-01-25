@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modules - QA Engineering Playbook</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Curriculum Modules</h1>
+            <p>Master quality engineering from fundamentals to advanced topics</p>
+        </div>
+    </section>
+
+    <!-- Modules Grid -->
+    <section class="content-section">
+        <div class="container">
+            <div class="modules-grid" id="modulesGrid"></div>
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.1"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadModulesPage();
+        });
+
+        function loadModulesPage() {
+            const grid = document.getElementById('modulesGrid');
+            modules.forEach((module, index) => {
+                const completed = progress.modules[module.id] || 0;
+                const progressPercent = (completed / module.lessons) * 100;
+
+                const card = document.createElement('div');
+                card.className = 'module-card';
+                card.onclick = () => window.location.href = `module.html?id=${module.id}`;
+
+                card.innerHTML = `
+                    <div class="module-header">
+                        <div class="module-number">${index.toString().padStart(2, '0')}</div>
+                        <div class="module-info">
+                            <h3>${module.title}</h3>
+                            <div class="module-meta">${module.lessons} lessons • ${module.duration}</div>
+                        </div>
+                    </div>
+                    <p class="module-description">${module.description}</p>
+                    <div class="module-lessons">
+                        <span>📚 ${completed} / ${module.lessons} lessons completed</span>
+                    </div>
+                    <div class="module-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                        </div>
+                    </div>
+                    <div class="module-tags">
+                        ${module.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>

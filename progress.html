@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Progress - QA Engineering Playbook</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Your Learning Progress</h1>
+            <p>Track your journey through the QA Engineering Playbook</p>
+        </div>
+    </section>
+
+    <!-- Progress Content -->
+    <section class="content-section">
+        <div class="container" style="max-width: 1000px;">
+
+            <!-- Overall Stats -->
+            <div class="progress-stats-grid">
+                <div class="progress-stat-card">
+                    <div class="stat-icon">📚</div>
+                    <h3>Modules Completed</h3>
+                    <div class="stat-number" id="modulesCompleted">0</div>
+                    <div class="stat-total">out of <span id="totalModules">11</span></div>
+                    <div class="progress-bar" style="margin-top: 1rem;">
+                        <div class="progress-fill" id="moduleProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-stat-card">
+                    <div class="stat-icon">📖</div>
+                    <h3>Lessons Completed</h3>
+                    <div class="stat-number" id="lessonsCompleted">0</div>
+                    <div class="stat-total">out of <span id="totalLessons">48</span></div>
+                    <div class="progress-bar" style="margin-top: 1rem;">
+                        <div class="progress-fill" id="lessonProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-stat-card">
+                    <div class="stat-icon">🧪</div>
+                    <h3>Labs Completed</h3>
+                    <div class="stat-number" id="labsCompleted">0</div>
+                    <div class="stat-total">out of <span id="totalLabs">10</span></div>
+                    <div class="progress-bar" style="margin-top: 1rem;">
+                        <div class="progress-fill" id="labProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module-by-Module Progress -->
+            <div class="progress-detail-section">
+                <h2>Module Progress</h2>
+                <div id="moduleProgressDetail"></div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="progress-detail-section">
+                <h2>Recent Activity</h2>
+                <div id="recentActivity">
+                    <p style="color: var(--gray); text-align: center; padding: 2rem;">
+                        Complete lessons to see your activity here
+                    </p>
+                </div>
+            </div>
+
+            <!-- Reset Progress -->
+            <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid var(--gray-light);">
+                <button class="btn btn-outline" onclick="resetProgress()">Reset All Progress</button>
+            </div>
+
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.1"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProgress();
+        });
+
+        function displayProgress() {
+            // Calculate overall stats
+            const totalModules = modules.length;
+            const completedModules = Object.values(progress.modules).filter(count => count > 0).length;
+            const modulePercent = (completedModules / totalModules) * 100;
+
+            const totalLessons = modules.reduce((sum, m) => sum + m.lessons, 0);
+            const completedLessons = Object.values(progress.lessons).filter(Boolean).length;
+            const lessonPercent = (completedLessons / totalLessons) * 100;
+
+            const totalLabs = labs.length;
+            const completedLabs = Object.values(progress.labs).filter(Boolean).length;
+            const labPercent = (completedLabs / totalLabs) * 100;
+
+            // Update overall stats
+            document.getElementById('modulesCompleted').textContent = completedModules;
+            document.getElementById('totalModules').textContent = totalModules;
+            document.getElementById('moduleProgress').style.width = modulePercent + '%';
+
+            document.getElementById('lessonsCompleted').textContent = completedLessons;
+            document.getElementById('totalLessons').textContent = totalLessons;
+            document.getElementById('lessonProgress').style.width = lessonPercent + '%';
+
+            document.getElementById('labsCompleted').textContent = completedLabs;
+            document.getElementById('totalLabs').textContent = totalLabs;
+            document.getElementById('labProgress').style.width = labPercent + '%';
+
+            // Display module-by-module progress
+            displayModuleProgress();
+        }
+
+        function displayModuleProgress() {
+            const container = document.getElementById('moduleProgressDetail');
+            container.innerHTML = '';
+
+            modules.forEach(module => {
+                const completed = progress.modules[module.id] || 0;
+                const percent = (completed / module.lessons) * 100;
+
+                const moduleCard = document.createElement('div');
+                moduleCard.className = 'module-progress-card';
+                moduleCard.innerHTML = `
+                    <div class="module-progress-header">
+                        <h3>${module.title}</h3>
+                        <span class="module-progress-count">${completed} / ${module.lessons} lessons</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percent}%"></div>
+                    </div>
+                    <a href="module.html?id=${module.id}" class="btn btn-outline btn-small" style="margin-top: 1rem;">
+                        ${completed === 0 ? 'Start Module' : completed === module.lessons ? 'Review Module' : 'Continue Learning'}
+                    </a>
+                `;
+
+                container.appendChild(moduleCard);
+            });
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all your progress? This cannot be undone.')) {
+                localStorage.removeItem('qaPlaybookProgress');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

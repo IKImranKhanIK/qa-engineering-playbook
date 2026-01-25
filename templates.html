@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates - QA Engineering Playbook</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Production-Ready Templates</h1>
+            <p>Download and customize professional QA templates for your projects</p>
+        </div>
+    </section>
+
+    <!-- Templates Grid -->
+    <section class="content-section">
+        <div class="container">
+            <div class="templates-grid" id="templatesGrid"></div>
+        </div>
+    </section>
+
+    <!-- Modal for viewing templates -->
+    <div id="templateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTemplateModal()">&times;</span>
+            <div id="templateBody"></div>
+        </div>
+    </div>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.1"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTemplatesPage();
+        });
+
+        function loadTemplatesPage() {
+            const grid = document.getElementById('templatesGrid');
+            templates.forEach(template => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+
+                card.innerHTML = `
+                    <div class="template-icon">${template.icon}</div>
+                    <h3>${template.title}</h3>
+                    <p>${template.description}</p>
+                    <div class="template-actions">
+                        <button class="btn btn-outline btn-small" onclick="viewTemplate('${template.file}')">View</button>
+                        <button class="btn btn-primary btn-small" onclick="downloadTemplate('${template.file}')">Download</button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        async function viewTemplate(file) {
+            try {
+                const response = await fetch(file);
+                const content = await response.text();
+
+                const modal = document.getElementById('templateModal');
+                const modalBody = document.getElementById('templateBody');
+
+                modalBody.innerHTML = convertMarkdownToHTML(content);
+                modal.style.display = 'block';
+            } catch (error) {
+                alert('Template file not found. Please ensure templates are in the correct location.');
+            }
+        }
+
+        function downloadTemplate(file) {
+            window.open(file, '_blank');
+        }
+
+        function closeTemplateModal() {
+            document.getElementById('templateModal').style.display = 'none';
+        }
+
+        window.onclick = (event) => {
+            const modal = document.getElementById('templateModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>

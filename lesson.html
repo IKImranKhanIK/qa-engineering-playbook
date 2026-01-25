@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson - QA Engineering Playbook</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        if (typeof mermaid !== 'undefined') {
+            mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Reading Progress Bar -->
+    <div class="reading-progress"></div>
+
+    <!-- Lesson Content -->
+    <section class="content-section">
+        <div class="container" style="max-width: 900px;">
+            <div id="lessonContent">
+                <p>Loading lesson...</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.1"></script>
+    <script>
+        let currentModuleId, currentLessonId;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentModuleId = parseInt(urlParams.get('module'));
+            currentLessonId = parseInt(urlParams.get('lesson'));
+
+            if (isNaN(currentModuleId) || isNaN(currentLessonId)) {
+                window.location.href = 'modules.html';
+                return;
+            }
+
+            const module = modules.find(m => m.id === currentModuleId);
+            if (!module || currentLessonId >= module.lessons_list.length) {
+                window.location.href = 'modules.html';
+                return;
+            }
+
+            loadLesson(module, currentLessonId);
+            setupReadingProgress();
+        });
+
+        async function loadLesson(module, lessonIndex) {
+            const lesson = module.lessons_list[lessonIndex];
+            const isObject = lesson && typeof lesson === 'object' && !Array.isArray(lesson);
+            const lessonTitle = isObject ? lesson.title : lesson;
+            const lessonFile = isObject && lesson.file ? lesson.file : null;
+
+            if (!lessonFile) {
+                document.getElementById('lessonContent').innerHTML = `
+                    <div class="lesson-nav">
+                        <a href="module.html?id=${module.id}" class="btn btn-outline">← Back to Module</a>
+                    </div>
+                    <h1>${lessonTitle}</h1>
+                    <p style="color: var(--gray); font-size: 1.2rem;">This lesson is coming soon!</p>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(lessonFile);
+                if (!response.ok) throw new Error('Lesson not found');
+
+                const markdown = await response.text();
+                const html = convertMarkdownToHTML(markdown);
+
+                const lessonKey = `${module.id}-${lessonIndex}`;
+                const isCompleted = progress.lessons[lessonKey];
+
+                // Navigation buttons
+                const prevLesson = lessonIndex > 0 ? lessonIndex - 1 : null;
+                const nextLesson = lessonIndex < module.lessons_list.length - 1 ? lessonIndex + 1 : null;
+
+                document.getElementById('lessonContent').innerHTML = `
+                    <div class="lesson-nav">
+                        <div>
+                            <a href="module.html?id=${module.id}" class="btn btn-outline btn-small">← Module</a>
+                            ${prevLesson !== null ? `<a href="lesson.html?module=${module.id}&lesson=${prevLesson}" class="btn btn-outline btn-small">← Previous</a>` : ''}
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-small" onclick="toggleLessonComplete()">
+                                ${isCompleted ? '✅ Completed' : 'Mark Complete'}
+                            </button>
+                            ${nextLesson !== null ? `<a href="lesson.html?module=${module.id}&lesson=${nextLesson}" class="btn btn-primary btn-small">Next →</a>` : ''}
+                        </div>
+                    </div>
+                    <div class="lesson-body">
+                        ${html}
+                    </div>
+                    <div class="lesson-nav" style="margin-top: 3rem; border-top: 2px solid var(--gray-light); padding-top: 2rem;">
+                        <div>
+                            ${prevLesson !== null ? `<a href="lesson.html?module=${module.id}&lesson=${prevLesson}" class="btn btn-outline">← Previous Lesson</a>` : ''}
+                        </div>
+                        <div>
+                            ${nextLesson !== null ? `<a href="lesson.html?module=${module.id}&lesson=${nextLesson}" class="btn btn-primary">Next Lesson →</a>` : `<a href="module.html?id=${module.id}" class="btn btn-primary">Back to Module</a>`}
+                        </div>
+                    </div>
+                `;
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+
+            } catch (error) {
+                console.error('Error loading lesson:', error);
+                document.getElementById('lessonContent').innerHTML = `
+                    <div class="lesson-nav">
+                        <a href="module.html?id=${module.id}" class="btn btn-outline">← Back to Module</a>
+                    </div>
+                    <h1>Error Loading Lesson</h1>
+                    <p style="color: var(--gray);">Failed to load lesson content. Please try again later.</p>
+                `;
+            }
+        }
+
+        function toggleLessonComplete() {
+            const lessonKey = `${currentModuleId}-${currentLessonId}`;
+            const isCompleted = progress.lessons[lessonKey];
+
+            if (isCompleted) {
+                delete progress.lessons[lessonKey];
+            } else {
+                progress.lessons[lessonKey] = true;
+            }
+
+            // Update module progress
+            const module = modules.find(m => m.id === currentModuleId);
+            const completedLessons = Object.keys(progress.lessons).filter(key =>
+                key.startsWith(`${currentModuleId}-`) && progress.lessons[key]
+            ).length;
+            progress.modules[currentModuleId] = completedLessons;
+
+            localStorage.setItem('qaPlaybookProgress', JSON.stringify(progress));
+
+            // Reload page to update UI
+            location.reload();
+        }
+
+        function setupReadingProgress() {
+            const progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) return;
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrollPercent = (scrollTop / scrollHeight) * 100;
+                progressBar.style.width = scrollPercent + '%';
+            });
+        }
+    </script>
+</body>
+</html>

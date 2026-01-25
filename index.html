@@ -5,31 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Engineering Playbook</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        if (typeof mermaid !== 'undefined') {
+            mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        }
+    </script>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <span class="logo">QA</span>
-                <span class="brand-text">Engineering Playbook</span>
-            </div>
-            <div class="nav-menu">
-                <a href="#home" class="nav-link active">Home</a>
-                <a href="#modules" class="nav-link">Modules</a>
-                <a href="#templates" class="nav-link">Templates</a>
-                <a href="#labs" class="nav-link">Labs</a>
-                <a href="#progress" class="nav-link">Progress</a>
-            </div>
-            <div class="nav-search">
-                <input type="text" id="searchInput" placeholder="Search playbook..." />
-            </div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                <span class="theme-icon">🌙</span>
-            </button>
-        </div>
-    </nav>
+    <div id="nav-placeholder"></div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -55,8 +41,8 @@
                 </div>
             </div>
             <div class="hero-cta">
-                <button class="btn btn-primary" onclick="scrollToModules()">Start Learning</button>
-                <button class="btn btn-secondary" onclick="viewProgress()">Track Progress</button>
+                <a href="modules.html" class="btn btn-primary">Start Learning</a>
+                <a href="progress.html" class="btn btn-secondary">Track Progress</a>
             </div>
         </div>
     </section>
@@ -76,7 +62,7 @@
                         <li>Software QA Basics</li>
                         <li>Test Automation</li>
                     </ul>
-                    <button class="btn btn-outline" onclick="startPath('beginner')">Start Path</button>
+                    <a href="modules.html" class="btn btn-outline">Start Path</a>
                 </div>
                 <div class="path-card">
                     <div class="path-icon">🚀</div>
@@ -88,7 +74,7 @@
                         <li>Security & Privacy</li>
                         <li>Mobile QA</li>
                     </ul>
-                    <button class="btn btn-outline" onclick="startPath('intermediate')">Start Path</button>
+                    <a href="modules.html" class="btn btn-outline">Start Path</a>
                 </div>
                 <div class="path-card">
                     <div class="path-icon">⚡</div>
@@ -100,7 +86,7 @@
                         <li>Failure Analysis</li>
                         <li>Manufacturing Quality</li>
                     </ul>
-                    <button class="btn btn-outline" onclick="startPath('hardware')">Start Path</button>
+                    <a href="modules.html" class="btn btn-outline">Start Path</a>
                 </div>
                 <div class="path-card">
                     <div class="path-icon">💻</div>
@@ -112,74 +98,12 @@
                         <li>Framework Design</li>
                         <li>Performance & Security</li>
                     </ul>
-                    <button class="btn btn-outline" onclick="startPath('sdet')">Start Path</button>
+                    <a href="modules.html" class="btn btn-outline">Start Path</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Modules Section -->
-    <section id="modules" class="modules-section">
-        <div class="container">
-            <h2 class="section-title">Curriculum Modules</h2>
-            <div class="modules-grid" id="modulesGrid">
-                <!-- Modules will be loaded dynamically -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Templates Section -->
-    <section id="templates" class="templates-section">
-        <div class="container">
-            <h2 class="section-title">Production-Ready Templates</h2>
-            <div class="templates-grid" id="templatesGrid">
-                <!-- Templates will be loaded dynamically -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Labs Section -->
-    <section id="labs" class="labs-section">
-        <div class="container">
-            <h2 class="section-title">Hands-On Labs</h2>
-            <div class="labs-grid" id="labsGrid">
-                <!-- Labs will be loaded dynamically -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Progress Section -->
-    <section id="progress" class="progress-section" style="display: none;">
-        <div class="container">
-            <h2 class="section-title">Your Progress</h2>
-            <div class="progress-stats">
-                <div class="progress-card">
-                    <h3>Modules Completed</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="moduleProgress" style="width: 0%"></div>
-                    </div>
-                    <p class="progress-text"><span id="completedModules">0</span> / 10 modules</p>
-                </div>
-                <div class="progress-card">
-                    <h3>Lessons Completed</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="lessonProgress" style="width: 0%"></div>
-                    </div>
-                    <p class="progress-text"><span id="completedLessons">0</span> / 50+ lessons</p>
-                </div>
-                <div class="progress-card">
-                    <h3>Labs Completed</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="labProgress" style="width: 0%"></div>
-                    </div>
-                    <p class="progress-text"><span id="completedLabs">0</span> / 20+ labs</p>
-                </div>
-            </div>
-            <div class="completed-items" id="completedItems">
-                <!-- Completed items will be listed here -->
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer class="footer">
@@ -191,9 +115,11 @@
                 </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
-                    <a href="#modules">Modules</a>
-                    <a href="#templates">Templates</a>
-                    <a href="#labs">Labs</a>
+                    <a href="modules.html">Modules</a>
+                    <a href="templates.html">Templates</a>
+                    <a href="labs.html">Labs</a>
+                    <a href="resources.html">Resources</a>
+                    <a href="progress.html">Progress</a>
                 </div>
                 <div class="footer-section">
                     <h4>Resources</h4>
@@ -208,15 +134,7 @@
         </div>
     </footer>
 
-    <!-- Modal for Content -->
-    <div id="contentModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="modalBody"></div>
-        </div>
-    </div>
-
-    <script src="app.js?v=2.0"></script>
+    <script src="nav.js"></script>
 </body>
 </html>
 <!-- v2.0 - Fixed lesson content loading -->

@@ -1,5 +1,5 @@
 // Data structure for modules
-// Version: 2.0 - Added lesson content loading
+// Version: 2.1 - Fixed table parsing and enhanced visuals
 const modules = [
     {
         id: 0,
@@ -522,7 +522,8 @@ async function showLesson(file, encodedTitle, moduleId, lessonId) {
 
         // Convert markdown to HTML
         modalBody.innerHTML = `
-            <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 1rem;">
+            <div class="reading-progress"></div>
+            <div class="lesson-nav">
                 <button class="btn btn-outline btn-small" onclick="showModule(modules.find(m => m.id === ${moduleId}))">
                     ← Back to Module
                 </button>
@@ -534,10 +535,31 @@ async function showLesson(file, encodedTitle, moduleId, lessonId) {
         `;
 
         modal.style.display = 'block';
+
+        // Add reading progress tracker
+        addReadingProgress();
+
+        // Scroll to top
+        modalBody.scrollTop = 0;
+
     } catch (error) {
         console.error('Error loading lesson:', error);
         alert('Failed to load lesson content. File: ' + file + '\nError: ' + error.message);
     }
+}
+
+function addReadingProgress() {
+    const modalBody = document.getElementById('modalBody');
+    const progressBar = modalBody.querySelector('.reading-progress');
+
+    if (!progressBar) return;
+
+    modalBody.addEventListener('scroll', () => {
+        const scrollTop = modalBody.scrollTop;
+        const scrollHeight = modalBody.scrollHeight - modalBody.clientHeight;
+        const scrollPercent = (scrollTop / scrollHeight) * 100;
+        progressBar.style.width = scrollPercent + '%';
+    });
 }
 
 function markLessonComplete(moduleId, lessonId) {
@@ -607,18 +629,41 @@ async function viewTemplate(file) {
 }
 
 function convertMarkdownToHTML(markdown) {
-    // Enhanced markdown conversion
+    // Enhanced markdown conversion with visual elements
     let html = markdown;
 
-    // Code blocks (```language ... ```)
+    // IMPORTANT: Parse tables FIRST before other processing
+    html = parseMarkdownTables(html);
+
+    // Code blocks with language tags (```language ... ```) - must be before inline code
     html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
-        return `<pre><code class="language-${lang || 'plaintext'}">${escapeHtml(code)}</code></pre>`;
+        const langName = lang || 'code';
+        return `<pre data-lang="${langName}"><code class="language-${langName}">${escapeHtml(code.trim())}</code></pre>`;
     });
 
     // Inline code (`code`)
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-    // Headers
+    // Images ![alt](url)
+    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
+        return `<figure style="text-align: center; margin: 2rem 0;">
+                    <img src="${url}" alt="${alt}" title="${alt}" />
+                    ${alt ? `<figcaption style="margin-top: 0.5rem; color: var(--gray); font-style: italic;">${alt}</figcaption>` : ''}
+                </figure>`;
+    });
+
+    // Links [text](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    // Special boxes: > **Note:** becomes an info box
+    html = html.replace(/> \*\*Note:\*\* (.+)/gi, '<div class="info-box"><strong>Note:</strong> $1</div>');
+    html = html.replace(/> \*\*Tip:\*\* (.+)/gi, '<div class="tip-box"><strong>Tip:</strong> $1</div>');
+    html = html.replace(/> \*\*Warning:\*\* (.+)/gi, '<div class="warning-box"><strong>Warning:</strong> $1</div>');
+
+    // Blockquotes (general) - after special boxes
+    html = html.replace(/^> (.+)$/gim, '<blockquote>$1</blockquote>');
+
+    // Headers with icons
     html = html.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
     html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
     html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
@@ -629,30 +674,110 @@ function convertMarkdownToHTML(markdown) {
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
-    // Links [text](url)
-    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+    // Ordered lists (1. item)
+    html = html.replace(/^\d+\.\s+(.+)$/gim, '<oli>$1</oli>');
+    html = html.replace(/(<oli>.*<\/oli>\n?)+/g, (match) => {
+        const items = match.replace(/<\/?oli>/g, '').split('\n').filter(i => i.trim());
+        return '<ol>' + items.map(i => `<li>${i}</li>`).join('') + '</ol>';
+    });
 
-    // Unordered lists
-    html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
-    html = html.replace(/^- (.+)$/gim, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    // Unordered lists (- or *)
+    html = html.replace(/^[\*\-]\s+(.+)$/gim, '<uli>$1</uli>');
+    html = html.replace(/(<uli>.*<\/uli>\n?)+/g, (match) => {
+        const items = match.replace(/<\/?uli>/g, '').split('\n').filter(i => i.trim());
+        return '<ul>' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
+    });
 
-    // Line breaks
-    html = html.replace(/\n\n/g, '</p><p>');
-    html = html.replace(/\n/g, '<br>');
+    // Horizontal rules
+    html = html.replace(/^---$/gim, '<hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--gray-light);">');
 
-    // Wrap in paragraphs
-    html = '<p>' + html + '</p>';
+    // Line breaks - preserve double newlines as paragraph breaks
+    html = html.split('\n\n').map(para => {
+        // Don't wrap if it's already a block element
+        if (para.match(/^<(h[1-6]|pre|ul|ol|blockquote|table|div|hr|figure)/)) {
+            return para;
+        }
+        return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+    }).join('\n');
 
-    // Clean up multiple paragraph tags
-    html = html.replace(/<p><\/p>/g, '');
-    html = html.replace(/<p>(<h[1-6]>)/g, '$1');
-    html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<pre>)/g, '$1');
-    html = html.replace(/(<\/pre>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<ul>)/g, '$1');
-    html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+    // Clean up
+    html = html.replace(/<p>\s*<\/p>/g, '');
+    html = html.replace(/<br>\s*<br>/g, '<br>');
 
+    return html;
+}
+
+function parseMarkdownTables(markdown) {
+    const lines = markdown.split('\n');
+    let result = [];
+    let i = 0;
+
+    while (i < lines.length) {
+        const line = lines[i];
+
+        // Check if this line starts a table (contains |)
+        if (line.trim().match(/^\|(.+)\|$/)) {
+            // Collect all consecutive table lines
+            let tableLines = [];
+            while (i < lines.length && lines[i].trim().match(/^\|(.+)\|$/)) {
+                tableLines.push(lines[i]);
+                i++;
+            }
+
+            // Convert table to HTML
+            if (tableLines.length >= 2) {
+                result.push(convertTableToHTML(tableLines));
+            } else {
+                result.push(...tableLines);
+            }
+        } else {
+            result.push(line);
+            i++;
+        }
+    }
+
+    return result.join('\n');
+}
+
+function convertTableToHTML(tableLines) {
+    if (tableLines.length < 2) return tableLines.join('\n');
+
+    let html = '\n<table>\n';
+
+    // Parse header row (first line)
+    const headerLine = tableLines[0].trim();
+    const headerCells = headerLine
+        .slice(1, -1)  // Remove leading and trailing |
+        .split('|')
+        .map(cell => cell.trim());
+
+    html += '<thead>\n<tr>\n';
+    headerCells.forEach(cell => {
+        html += `  <th>${cell}</th>\n`;
+    });
+    html += '</tr>\n</thead>\n';
+
+    // Skip separator line (second line with dashes)
+    // Parse data rows (remaining lines)
+    if (tableLines.length > 2) {
+        html += '<tbody>\n';
+        for (let i = 2; i < tableLines.length; i++) {
+            const dataLine = tableLines[i].trim();
+            const dataCells = dataLine
+                .slice(1, -1)  // Remove leading and trailing |
+                .split('|')
+                .map(cell => cell.trim());
+
+            html += '<tr>\n';
+            dataCells.forEach(cell => {
+                html += `  <td>${cell}</td>\n`;
+            });
+            html += '</tr>\n';
+        }
+        html += '</tbody>\n';
+    }
+
+    html += '</table>\n';
     return html;
 }
 

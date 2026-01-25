@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labs - QA Engineering Playbook</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Hands-On Labs</h1>
+            <p>Practice your skills with real-world QA exercises and challenges</p>
+        </div>
+    </section>
+
+    <!-- Labs Grid -->
+    <section class="content-section">
+        <div class="container">
+            <div class="filter-tabs" style="margin-bottom: 2rem; text-align: center;">
+                <button class="filter-btn active" onclick="filterLabs('all')">All Labs</button>
+                <button class="filter-btn" onclick="filterLabs('software')">Software</button>
+                <button class="filter-btn" onclick="filterLabs('automation')">Automation</button>
+                <button class="filter-btn" onclick="filterLabs('hardware')">Hardware</button>
+                <button class="filter-btn" onclick="filterLabs('systems')">Systems</button>
+            </div>
+            <div class="labs-grid" id="labsGrid"></div>
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.1"></script>
+    <script>
+        let allLabs = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            allLabs = labs;
+            loadLabsPage();
+        });
+
+        function loadLabsPage(filter = 'all') {
+            const grid = document.getElementById('labsGrid');
+            grid.innerHTML = '';
+
+            const filteredLabs = filter === 'all' ? allLabs : allLabs.filter(lab => lab.category === filter);
+
+            filteredLabs.forEach(lab => {
+                const card = document.createElement('div');
+                card.className = 'lab-card';
+
+                const isCompleted = progress.labs[lab.title];
+
+                card.innerHTML = `
+                    <span class="lab-difficulty difficulty-${lab.difficulty}">${lab.difficulty}</span>
+                    ${isCompleted ? '<span class="lab-completed-badge">✅ Completed</span>' : ''}
+                    <h3>${lab.title}</h3>
+                    <p>${lab.description}</p>
+                    <div class="lab-meta">
+                        <span>⏱️ ${lab.duration}</span>
+                        <span>📁 ${lab.category}</span>
+                    </div>
+                    <button class="btn ${isCompleted ? 'btn-outline' : 'btn-primary'}" onclick="toggleLabComplete('${lab.title}')">
+                        ${isCompleted ? 'Mark Incomplete' : 'Mark Complete'}
+                    </button>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function filterLabs(category) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            loadLabsPage(category);
+        }
+
+        function toggleLabComplete(labTitle) {
+            if (progress.labs[labTitle]) {
+                delete progress.labs[labTitle];
+            } else {
+                progress.labs[labTitle] = true;
+            }
+            localStorage.setItem('qaPlaybookProgress', JSON.stringify(progress));
+            loadLabsPage();
+        }
+    </script>
+</body>
+</html>
