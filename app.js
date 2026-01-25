@@ -747,8 +747,6 @@ function parseMarkdownTables(markdown) {
 function convertTableToHTML(tableLines) {
     if (tableLines.length < 2) return tableLines.join('\n');
 
-    let html = '\n<table>\n';
-
     // Parse header row (first line)
     const headerLine = tableLines[0].trim();
     const headerCells = headerLine
@@ -756,16 +754,16 @@ function convertTableToHTML(tableLines) {
         .split('|')
         .map(cell => cell.trim());
 
-    html += '<thead>\n<tr>\n';
+    let html = '<table><thead><tr>';
     headerCells.forEach(cell => {
-        html += `  <th>${cell}</th>\n`;
+        html += `<th>${cell}</th>`;
     });
-    html += '</tr>\n</thead>\n';
+    html += '</tr></thead>';
 
     // Skip separator line (second line with dashes)
     // Parse data rows (remaining lines)
     if (tableLines.length > 2) {
-        html += '<tbody>\n';
+        html += '<tbody>';
         for (let i = 2; i < tableLines.length; i++) {
             const dataLine = tableLines[i].trim();
             const dataCells = dataLine
@@ -773,16 +771,16 @@ function convertTableToHTML(tableLines) {
                 .split('|')
                 .map(cell => cell.trim());
 
-            html += '<tr>\n';
+            html += '<tr>';
             dataCells.forEach(cell => {
-                html += `  <td>${cell}</td>\n`;
+                html += `<td>${cell}</td>`;
             });
-            html += '</tr>\n';
+            html += '</tr>';
         }
-        html += '</tbody>\n';
+        html += '</tbody>';
     }
 
-    html += '</table>\n';
+    html += '</table>';
     return html;
 }
 
