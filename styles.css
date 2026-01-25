@@ -989,6 +989,60 @@ body {
     border-bottom: none;
 }
 
+/* Table Styling for Lesson Pages */
+.lesson-body table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin: 2rem 0;
+    border: 2px solid var(--gray-light);
+}
+
+.lesson-body thead {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+.lesson-body th {
+    color: white;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-bottom: 3px solid var(--primary-dark);
+}
+
+.lesson-body tbody tr {
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+.lesson-body tbody tr:nth-child(even) {
+    background: var(--light);
+}
+
+.lesson-body tbody tr:hover {
+    background: #e0e7ff;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="dark"] .lesson-body tbody tr:hover {
+    background: #374151;
+}
+
+.lesson-body td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--gray-light);
+    color: var(--dark-light);
+}
+
+.lesson-body tbody tr:last-child td {
+    border-bottom: none;
+}
+
 /* Highlight boxes for important content */
 .highlight-box {
     background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
