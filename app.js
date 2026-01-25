@@ -143,13 +143,13 @@ const modules = [
         duration: "10-12 hours",
         tags: ["Systems", "Integration", "IoT"],
         lessons_list: [
-            "Device + App + Backend Testing",
-            "Compatibility Matrices",
-            "Firmware ↔ Software Versioning",
-            "Interoperability Testing",
-            "Field Issue Analysis",
-            "OTA Update Testing",
-            "End-to-End System Validation"
+            { title: "Device + App + Backend Testing", file: "docs/08-systems-integration/01-device-app-backend-testing.md" },
+            { title: "Compatibility Matrices", file: "docs/08-systems-integration/02-compatibility-matrices.md" },
+            { title: "Firmware ↔ Software Versioning", file: "docs/08-systems-integration/03-firmware-software-versioning.md" },
+            { title: "Interoperability Testing", file: "docs/08-systems-integration/04-interoperability-testing.md" },
+            { title: "Field Issue Analysis", file: "docs/08-systems-integration/05-field-issue-analysis.md" },
+            { title: "OTA Update Testing", file: "docs/08-systems-integration/06-ota-update-testing.md" },
+            { title: "End-to-End System Validation", file: "docs/08-systems-integration/07-end-to-end-system-validation.md" }
         ]
     },
     {
@@ -160,12 +160,12 @@ const modules = [
         duration: "8-10 hours",
         tags: ["Release", "Metrics", "Management"],
         lessons_list: [
-            "Go / No-Go Criteria",
-            "Bug Triage Process",
-            "Release Readiness Reviews",
-            "Quality Metrics That Matter",
-            "Defect Prediction",
-            "Post-Release Monitoring"
+            { title: "Go / No-Go Criteria", file: "docs/09-release-quality/01-go-no-go-criteria.md" },
+            { title: "Bug Triage Process", file: "docs/09-release-quality/02-bug-triage-process.md" },
+            { title: "Release Readiness Reviews", file: "docs/09-release-quality/03-release-readiness-reviews.md" },
+            { title: "Quality Metrics That Matter", file: "docs/09-release-quality/04-quality-metrics-that-matter.md" },
+            { title: "Defect Prediction", file: "docs/09-release-quality/05-defect-prediction.md" },
+            { title: "Post-Release Monitoring", file: "docs/09-release-quality/06-post-release-monitoring.md" }
         ]
     },
     {
@@ -176,11 +176,11 @@ const modules = [
         duration: "6-8 hours",
         tags: ["Career", "Interview", "Growth"],
         lessons_list: [
-            "Interview Preparation",
-            "Common QA Interview Questions",
-            "Technical Assessments",
-            "Resume & Portfolio",
-            "Career Advancement"
+            { title: "Interview Preparation", file: "docs/10-career-interviews/01-interview-preparation.md" },
+            { title: "Common QA Interview Questions", file: "docs/10-career-interviews/02-common-interview-questions.md" },
+            { title: "Technical Assessments", file: "docs/10-career-interviews/03-technical-assessments.md" },
+            { title: "Resume & Portfolio", file: "docs/10-career-interviews/04-resume-portfolio.md" },
+            { title: "Career Advancement", file: "docs/10-career-interviews/05-career-advancement.md" }
         ]
     }
 ];
