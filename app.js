@@ -334,13 +334,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadModules() {
     const grid = document.getElementById('modulesGrid');
+    if (!grid) return; // Exit if modulesGrid doesn't exist on this page
+
     modules.forEach((module, index) => {
         const completed = progress.modules[module.id] || 0;
         const progressPercent = (completed / module.lessons) * 100;
 
         const card = document.createElement('div');
         card.className = 'module-card';
-        card.onclick = () => showModule(module);
+        // Navigate to module.html instead of showing modal
+        card.onclick = () => window.location.href = `module.html?id=${module.id}`;
 
         card.innerHTML = `
             <div class="module-header">
