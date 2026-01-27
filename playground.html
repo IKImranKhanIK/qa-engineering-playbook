@@ -447,10 +447,8 @@ print(f"2 + 3 = {sum_numbers(2, 3)}")`
             };
             document.getElementById('editorLabel').textContent = labels[lang];
 
-            // Load default code
-            if (!document.getElementById('codeEditor').value.trim()) {
-                loadDefaultCode();
-            }
+            // Load default code for the new language
+            loadDefaultCode();
 
             // Load examples
             loadExamples();
