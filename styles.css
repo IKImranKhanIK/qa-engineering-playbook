@@ -4115,7 +4115,7 @@ kbd {
 }
 
 [data-theme="dark"] .playground-examples h3 {
-    color: var(--light);
+    color: var(--dark);
 }
 
 /* Responsive playground */
