@@ -7,8 +7,20 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3b82f6">
-    <link rel="stylesheet" href="styles.css?v=2.6">
+    <link rel="stylesheet" href="styles.css?v=2.7">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Pyodide for Python execution -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <style>
+        .py-status {
+            font-size: 0.75rem;
+            margin-left: 4px;
+        }
+        #runBtn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -35,12 +47,12 @@
                         HTML/CSS
                     </button>
                     <button class="lang-btn" data-lang="python" onclick="switchLanguage('python')">
-                        Python
+                        Python <span id="pyStatus" class="py-status"></span>
                     </button>
                 </div>
 
                 <div class="playground-actions">
-                    <button class="btn btn-primary" onclick="runCode()">▶️ Run Code</button>
+                    <button id="runBtn" class="btn btn-primary" onclick="runCode()" title="Ctrl+Enter">▶️ Run</button>
                     <button class="btn btn-outline" onclick="clearOutput()">🗑️ Clear</button>
                     <button class="btn btn-outline" onclick="resetCode()">↻ Reset</button>
                     <button class="btn btn-outline" onclick="shareCode()">📤 Share</button>
@@ -84,9 +96,12 @@
     </section>
 
     <script src="nav.js"></script>
-    <script src="app.js?v=2.6"></script>
+    <script src="app.js?v=2.7"></script>
     <script>
         let currentLanguage = 'javascript';
+        let pyodide = null;
+        let pyodideLoading = false;
+        let pyodideReady = false;
 
         const examples = {
             javascript: [
@@ -340,9 +355,77 @@ print(f"2 + 3 = {sum_numbers(2, 3)}")`
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadDefaultCode();
+            // Check for shared code in URL first
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('code')) {
+                try {
+                    const code = decodeURIComponent(atob(urlParams.get('code')));
+                    const lang = urlParams.get('lang') || 'javascript';
+                    currentLanguage = lang;
+                    document.getElementById('codeEditor').value = code;
+
+                    // Update UI for the language
+                    document.querySelectorAll('.lang-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.lang === lang);
+                    });
+                    const labels = { javascript: 'JavaScript Code', html: 'HTML Code', python: 'Python Code' };
+                    document.getElementById('editorLabel').textContent = labels[lang];
+                } catch (error) {
+                    console.error('Failed to load shared code:', error);
+                    loadDefaultCode();
+                }
+            } else {
+                loadDefaultCode();
+            }
+
             loadExamples();
+
+            // Add keyboard shortcuts
+            document.getElementById('codeEditor').addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + Enter to run
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    runCode();
+                }
+                // Tab for indentation
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    e.target.value = e.target.value.substring(0, start) + '    ' + e.target.value.substring(end);
+                    e.target.selectionStart = e.target.selectionEnd = start + 4;
+                }
+            });
+
+            // Pre-load Pyodide in background
+            loadPyodide();
         });
+
+        async function loadPyodide() {
+            if (pyodideReady || pyodideLoading) return;
+            pyodideLoading = true;
+
+            const pyStatus = document.getElementById('pyStatus');
+            pyStatus.textContent = '⏳';
+            pyStatus.title = 'Loading Python...';
+
+            try {
+                pyodide = await globalThis.loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+                });
+                pyodideReady = true;
+                pyStatus.textContent = '✓';
+                pyStatus.title = 'Python ready';
+                pyStatus.style.color = '#10b981';
+                console.log('Pyodide loaded successfully');
+            } catch (error) {
+                console.error('Failed to load Pyodide:', error);
+                pyStatus.textContent = '✗';
+                pyStatus.title = 'Failed to load Python';
+                pyStatus.style.color = '#ef4444';
+                pyodideLoading = false;
+            }
+        }
 
         function loadDefaultCode() {
             document.getElementById('codeEditor').value = defaultCode[currentLanguage];
@@ -392,24 +475,35 @@ print(f"2 + 3 = {sum_numbers(2, 3)}")`
             clearOutput();
         }
 
-        function runCode() {
+        async function runCode() {
             const code = document.getElementById('codeEditor').value;
             const output = document.getElementById('output');
+            const runBtn = document.getElementById('runBtn');
             const startTime = performance.now();
+
+            // Disable button during execution
+            runBtn.disabled = true;
+            runBtn.textContent = '⏳ Running...';
 
             clearOutput();
 
-            if (currentLanguage === 'javascript') {
-                runJavaScript(code, output);
-            } else if (currentLanguage === 'html') {
-                runHTML(code, output);
-            } else if (currentLanguage === 'python') {
-                runPython(code, output);
-            }
+            try {
+                if (currentLanguage === 'javascript') {
+                    runJavaScript(code, output);
+                } else if (currentLanguage === 'html') {
+                    runHTML(code, output);
+                } else if (currentLanguage === 'python') {
+                    await runPython(code, output);
+                }
+            } finally {
+                // Re-enable button
+                runBtn.disabled = false;
+                runBtn.textContent = '▶️ Run';
 
-            const endTime = performance.now();
-            document.getElementById('executionTime').textContent =
-                `⏱️ ${(endTime - startTime).toFixed(2)}ms`;
+                const endTime = performance.now();
+                document.getElementById('executionTime').textContent =
+                    `⏱️ ${(endTime - startTime).toFixed(2)}ms`;
+            }
         }
 
         function runJavaScript(code, output) {
@@ -448,17 +542,69 @@ print(f"2 + 3 = {sum_numbers(2, 3)}")`
             iframe.contentDocument.close();
         }
 
-        function runPython(code, output) {
-            // Note: This is a simplified Python interpreter simulation
-            // In a real implementation, you'd use Pyodide or Skulpt
-            output.innerHTML = `
-                <div class="output-info">
-                    ℹ️ Python execution requires a Python interpreter.<br>
-                    This is a demonstration mode. In a production environment,
-                    use Pyodide or Skulpt for real Python execution.
-                </div>
-                <div class="output-line">>> ${escapeHtml(code)}</div>
-            `;
+        async function runPython(code, output) {
+            if (!pyodideReady) {
+                output.innerHTML = `
+                    <div class="output-info">
+                        ⏳ Loading Python interpreter... Please wait.
+                    </div>
+                `;
+
+                // Try to load if not already loading
+                if (!pyodideLoading) {
+                    await loadPyodide();
+                } else {
+                    // Wait for it to finish loading
+                    while (pyodideLoading && !pyodideReady) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                }
+
+                if (!pyodideReady) {
+                    output.innerHTML = `
+                        <div class="output-error">
+                            ❌ Failed to load Python interpreter. Please refresh the page and try again.
+                        </div>
+                    `;
+                    return;
+                }
+            }
+
+            try {
+                // Redirect stdout to capture print statements
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+                `);
+
+                // Run the user's code
+                pyodide.runPython(code);
+
+                // Get the output
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+
+                // Reset stdout/stderr
+                pyodide.runPython(`
+sys.stdout = sys.__stdout__
+sys.stderr = sys.__stderr__
+                `);
+
+                if (stderr) {
+                    output.innerHTML = `<div class="output-error">❌ ${escapeHtml(stderr)}</div>`;
+                } else if (stdout) {
+                    output.innerHTML = stdout.split('\n')
+                        .filter(line => line !== '')
+                        .map(line => `<div class="output-line">${escapeHtml(line)}</div>`)
+                        .join('');
+                } else {
+                    output.innerHTML = '<div class="output-info">✅ Code executed successfully (no output)</div>';
+                }
+            } catch (error) {
+                output.innerHTML = `<div class="output-error">❌ Error: ${escapeHtml(error.message)}</div>`;
+            }
         }
 
         function clearOutput() {
@@ -519,20 +665,6 @@ print(f"2 + 3 = {sum_numbers(2, 3)}")`
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
-
-        // Load shared code from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('code')) {
-            try {
-                const code = decodeURIComponent(atob(urlParams.get('code')));
-                const lang = urlParams.get('lang') || 'javascript';
-                currentLanguage = lang;
-                document.getElementById('codeEditor').value = code;
-                switchLanguage(lang);
-            } catch (error) {
-                console.error('Failed to load shared code:', error);
-            }
         }
     </script>
 </body>
