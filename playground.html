@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3b82f6">
-    <link rel="stylesheet" href="styles.css?v=2.7">
+    <link rel="stylesheet" href="styles.css?v=2.8">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Pyodide for Python execution -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
@@ -96,7 +96,7 @@
     </section>
 
     <script src="nav.js"></script>
-    <script src="app.js?v=2.7"></script>
+    <script src="app.js?v=2.8"></script>
     <script>
         let currentLanguage = 'javascript';
         let pyodide = null;
@@ -428,10 +428,13 @@ print(f"2 + 3 = {sum_numbers(2, 3)}")`
         }
 
         function loadDefaultCode() {
+            console.log('Loading default code for:', currentLanguage);
+            console.log('Code:', defaultCode[currentLanguage]);
             document.getElementById('codeEditor').value = defaultCode[currentLanguage];
         }
 
         function switchLanguage(lang) {
+            console.log('Switching to language:', lang);
             currentLanguage = lang;
 
             // Update active button
