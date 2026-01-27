@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modules - QA Engineering Playbook</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,6 +19,17 @@
         <div class="container">
             <h1>Curriculum Modules</h1>
             <p>Master quality engineering from fundamentals to advanced topics</p>
+
+            <!-- Search Bar -->
+            <div class="search-container" style="margin-top: 2rem;">
+                <input
+                    type="text"
+                    id="moduleSearch"
+                    class="search-input"
+                    placeholder="🔍 Search modules by title, description, or tags..."
+                    aria-label="Search modules"
+                />
+            </div>
         </div>
     </section>
 
@@ -23,11 +37,55 @@
     <section class="content-section">
         <div class="container">
             <div class="modules-grid" id="modulesGrid"></div>
+            <p id="noResults" style="display: none; text-align: center; color: var(--gray); padding: 3rem; font-size: 1.1rem;">
+                No modules found matching your search.
+            </p>
         </div>
     </section>
 
     <script src="nav.js"></script>
-    <script src="app.js?v=2.3"></script>
-    <!-- Module loading is now handled by app.js -->
+    <script src="app.js?v=2.6"></script>
+    <script>
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('moduleSearch');
+            const modulesGrid = document.getElementById('modulesGrid');
+            const noResults = document.getElementById('noResults');
+
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                filterModules(searchTerm);
+            });
+
+            function filterModules(searchTerm) {
+                const moduleCards = modulesGrid.querySelectorAll('.module-card');
+                let visibleCount = 0;
+
+                moduleCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const description = card.querySelector('p').textContent.toLowerCase();
+                    const tags = card.getAttribute('data-tags')?.toLowerCase() || '';
+
+                    const matches = title.includes(searchTerm) ||
+                                  description.includes(searchTerm) ||
+                                  tags.includes(searchTerm);
+
+                    if (matches) {
+                        card.style.display = '';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show/hide no results message
+                if (visibleCount === 0 && searchTerm !== '') {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

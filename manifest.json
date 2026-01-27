@@ -1,0 +1,43 @@
+{
+  "name": "QA Engineering Playbook",
+  "short_name": "QA Playbook",
+  "description": "A comprehensive, production-grade guide to QA covering software, hardware, and systems testing",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Browse Modules",
+      "short_name": "Modules",
+      "description": "View all learning modules",
+      "url": "/modules.html",
+      "icons": []
+    },
+    {
+      "name": "Track Progress",
+      "short_name": "Progress",
+      "description": "View your learning progress",
+      "url": "/progress.html",
+      "icons": []
+    },
+    {
+      "name": "Learning Paths",
+      "short_name": "Paths",
+      "description": "Choose a learning path",
+      "url": "/learning-paths.html",
+      "icons": []
+    }
+  ]
+}

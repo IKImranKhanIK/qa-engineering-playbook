@@ -12,9 +12,12 @@ function renderNavigation() {
             <div class="nav-menu">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="modules.html" class="nav-link">Modules</a>
+                <a href="learning-paths.html" class="nav-link">Paths</a>
+                <a href="playground.html" class="nav-link">Playground</a>
                 <a href="templates.html" class="nav-link">Templates</a>
                 <a href="labs.html" class="nav-link">Labs</a>
                 <a href="resources.html" class="nav-link">Resources</a>
+                <a href="glossary.html" class="nav-link">Glossary</a>
                 <a href="progress.html" class="nav-link">Progress</a>
             </div>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">

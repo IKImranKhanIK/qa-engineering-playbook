@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Glossary - QA Engineering Playbook</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>QA Engineering Glossary</h1>
+            <p>Comprehensive reference of quality engineering terms, acronyms, and concepts</p>
+
+            <!-- Search Bar -->
+            <div class="search-container" style="margin-top: 2rem;">
+                <input
+                    type="text"
+                    id="glossarySearch"
+                    class="search-input"
+                    placeholder="🔍 Search terms..."
+                    aria-label="Search glossary"
+                />
+            </div>
+        </div>
+    </section>
+
+    <!-- A-Z Navigation -->
+    <section class="content-section" style="padding-top: 1rem;">
+        <div class="container" style="max-width: 1000px;">
+            <div class="az-nav">
+                <a href="#A" class="az-link">A</a>
+                <a href="#B" class="az-link">B</a>
+                <a href="#C" class="az-link">C</a>
+                <a href="#D" class="az-link">D</a>
+                <a href="#E" class="az-link">E</a>
+                <a href="#F" class="az-link">F</a>
+                <a href="#G" class="az-link">G</a>
+                <a href="#H" class="az-link">H</a>
+                <a href="#I" class="az-link">I</a>
+                <a href="#J" class="az-link">J</a>
+                <a href="#K" class="az-link">K</a>
+                <a href="#L" class="az-link">L</a>
+                <a href="#M" class="az-link">M</a>
+                <a href="#N" class="az-link">N</a>
+                <a href="#O" class="az-link">O</a>
+                <a href="#P" class="az-link">P</a>
+                <a href="#Q" class="az-link">Q</a>
+                <a href="#R" class="az-link">R</a>
+                <a href="#S" class="az-link">S</a>
+                <a href="#T" class="az-link">T</a>
+                <a href="#U" class="az-link">U</a>
+                <a href="#V" class="az-link">V</a>
+                <a href="#W" class="az-link">W</a>
+                <a href="#X" class="az-link">X</a>
+                <a href="#Y" class="az-link">Y</a>
+                <a href="#Z" class="az-link">Z</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Glossary Content -->
+    <section class="content-section">
+        <div class="container" style="max-width: 1000px;">
+            <div id="glossaryContent">
+                <p style="text-align: center; color: var(--gray); padding: 2rem;">Loading glossary...</p>
+            </div>
+            <p id="noGlossaryResults" style="display: none; text-align: center; color: var(--gray); padding: 3rem; font-size: 1.1rem;">
+                No terms found matching your search.
+            </p>
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.6"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadGlossary();
+            setupGlossarySearch();
+        });
+
+        async function loadGlossary() {
+            try {
+                const response = await fetch('docs/glossary.md');
+                const markdown = await response.text();
+                const html = convertMarkdownToHTML(markdown);
+
+                document.getElementById('glossaryContent').innerHTML = html;
+
+                // Add smooth scroll behavior
+                document.querySelectorAll('.az-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = document.querySelector(link.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading glossary:', error);
+                document.getElementById('glossaryContent').innerHTML = `
+                    <p style="text-align: center; color: var(--error);">
+                        Failed to load glossary. Please try again later.
+                    </p>
+                `;
+            }
+        }
+
+        function setupGlossarySearch() {
+            const searchInput = document.getElementById('glossarySearch');
+            const glossaryContent = document.getElementById('glossaryContent');
+            const noResults = document.getElementById('noGlossaryResults');
+
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                filterGlossary(searchTerm);
+            });
+
+            function filterGlossary(searchTerm) {
+                const terms = glossaryContent.querySelectorAll('h2, p, strong');
+                let visibleCount = 0;
+
+                if (!searchTerm) {
+                    // Show all
+                    terms.forEach(el => {
+                        el.style.display = '';
+                        if (el.parentElement) el.parentElement.style.display = '';
+                    });
+                    glossaryContent.style.display = '';
+                    noResults.style.display = 'none';
+                    return;
+                }
+
+                // Hide all first
+                terms.forEach(el => {
+                    const text = el.textContent.toLowerCase();
+                    const parent = el.closest('h2, p');
+
+                    if (text.includes(searchTerm)) {
+                        if (parent) parent.style.display = '';
+                        el.style.display = '';
+                        visibleCount++;
+                    } else {
+                        if (parent && parent.tagName !== 'H2') {
+                            parent.style.display = 'none';
+                        }
+                    }
+                });
+
+                if (visibleCount === 0) {
+                    glossaryContent.style.display = 'none';
+                    noResults.style.display = 'block';
+                } else {
+                    glossaryContent.style.display = '';
+                    noResults.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

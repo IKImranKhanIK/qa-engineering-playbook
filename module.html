@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module - QA Engineering Playbook</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -21,7 +24,8 @@
     </section>
 
     <script src="nav.js"></script>
-    <script src="app.js?v=2.3"></script>
+    <script src="app.js?v=2.6"></script>
+    <script src="quizzes.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -89,7 +93,27 @@
                         `;
                     }).join('')}
                 </div>
+
+                ${quizzes[module.id] ? `
+                    <div class="quiz-section">
+                        <h2>📝 Module Quiz</h2>
+                        <p>Test your knowledge with ${quizzes[module.id].questions.length} questions</p>
+                        ${getQuizProgress(module.id) ? `
+                            <div class="quiz-score">
+                                Previous Score: ${getQuizProgress(module.id).score}/${getQuizProgress(module.id).total}
+                                (${getQuizProgress(module.id).percentage}%)
+                            </div>
+                        ` : ''}
+                        <button class="btn btn-primary" onclick="startQuiz(${module.id})">
+                            ${getQuizProgress(module.id) ? 'Retake Quiz' : 'Start Quiz'}
+                        </button>
+                    </div>
+                ` : ''}
             `;
+        }
+
+        function startQuiz(moduleId) {
+            window.location.href = `quiz.html?module=${moduleId}`;
         }
     </script>
 </body>

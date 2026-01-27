@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificates - QA Engineering Playbook</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>🏆 Certificates</h1>
+            <p>Generate and download certificates for completed modules and learning paths</p>
+        </div>
+    </section>
+
+    <!-- Certificates Content -->
+    <section class="content-section">
+        <div class="container" style="max-width: 1200px;">
+            <div id="certificatesContent"></div>
+        </div>
+    </section>
+
+    <!-- Certificate Modal -->
+    <div id="certificateModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 900px;">
+            <span class="modal-close" onclick="closeCertificateModal()">&times;</span>
+            <div id="certificatePreview"></div>
+        </div>
+    </div>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.6"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCertificates();
+        });
+
+        function displayCertificates() {
+            const container = document.getElementById('certificatesContent');
+
+            // Calculate completed modules
+            const completedModules = modules.filter(module => {
+                const completed = progress.modules[module.id] || 0;
+                return completed === module.lessons;
+            });
+
+            const totalModules = modules.length;
+            const completionPercentage = Math.round((completedModules.length / totalModules) * 100);
+
+            container.innerHTML = `
+                <!-- Course Completion Certificate -->
+                <div class="certificate-section">
+                    <h2>🎓 Course Completion Certificate</h2>
+                    <p>Complete all modules to earn your QA Engineering Playbook Certificate of Completion</p>
+
+                    <div class="certificate-card ${completionPercentage === 100 ? 'available' : 'locked'}">
+                        <div class="certificate-badge">
+                            ${completionPercentage === 100 ? '🏆' : '🔒'}
+                        </div>
+                        <div class="certificate-info">
+                            <h3>QA Engineering Playbook - Certificate of Completion</h3>
+                            <p>Complete all ${totalModules} modules to unlock this certificate</p>
+                            <div class="progress-bar" style="margin: 1rem 0;">
+                                <div class="progress-fill" style="width: ${completionPercentage}%"></div>
+                            </div>
+                            <p style="color: var(--gray);">${completedModules.length} of ${totalModules} modules completed (${completionPercentage}%)</p>
+                        </div>
+                        ${completionPercentage === 100 ? `
+                            <button class="btn btn-primary" onclick="generateCertificate('course')">
+                                Generate Certificate
+                            </button>
+                        ` : `
+                            <button class="btn btn-outline" disabled>
+                                Locked
+                            </button>
+                        `}
+                    </div>
+                </div>
+
+                <!-- Module Certificates -->
+                <div class="certificate-section">
+                    <h2>📚 Module Certificates</h2>
+                    <p>Earn certificates for each completed module</p>
+
+                    <div class="certificates-grid">
+                        ${modules.map(module => {
+                            const completed = progress.modules[module.id] || 0;
+                            const isCompleted = completed === module.lessons;
+
+                            return `
+                                <div class="certificate-card ${isCompleted ? 'available' : 'locked'}">
+                                    <div class="certificate-badge-small">
+                                        ${isCompleted ? '✅' : '🔒'}
+                                    </div>
+                                    <h3>${module.title}</h3>
+                                    <p>${module.lessons} lessons</p>
+                                    ${isCompleted ? `
+                                        <button class="btn btn-primary btn-small"
+                                                onclick="generateCertificate('module', ${module.id})">
+                                            Generate Certificate
+                                        </button>
+                                    ` : `
+                                        <div class="progress-bar" style="margin: 1rem 0;">
+                                            <div class="progress-fill" style="width: ${(completed / module.lessons) * 100}%"></div>
+                                        </div>
+                                        <p style="color: var(--gray); font-size: 0.9rem;">
+                                            ${completed}/${module.lessons} completed
+                                        </p>
+                                    `}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="certificate-instructions">
+                    <h3>How to Get Your Certificate</h3>
+                    <ol>
+                        <li>Complete all lessons in a module or the entire course</li>
+                        <li>Click "Generate Certificate" on the completed module/course</li>
+                        <li>Enter your name when prompted</li>
+                        <li>Download your certificate as a PNG image</li>
+                        <li>Share your achievement on LinkedIn or with your network!</li>
+                    </ol>
+                </div>
+            `;
+        }
+
+        function generateCertificate(type, moduleId = null) {
+            // Prompt for user name
+            const userName = prompt('Enter your name for the certificate:',
+                                   localStorage.getItem('certificateName') || '');
+
+            if (!userName || userName.trim() === '') {
+                return;
+            }
+
+            // Save name for future use
+            localStorage.setItem('certificateName', userName.trim());
+
+            // Generate certificate based on type
+            if (type === 'course') {
+                createCourseCertificate(userName.trim());
+            } else if (type === 'module' && moduleId !== null) {
+                const module = modules.find(m => m.id === moduleId);
+                createModuleCertificate(userName.trim(), module);
+            }
+        }
+
+        function createCourseCertificate(userName) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1200;
+            canvas.height = 900;
+            const ctx = canvas.getContext('2d');
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#3b82f6');
+            gradient.addColorStop(1, '#1e40af');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Border
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+
+            // Inner border
+            ctx.strokeStyle = '#93c5fd';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+
+            // Certificate text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 60px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('CERTIFICATE OF COMPLETION', canvas.width / 2, 180);
+
+            ctx.font = '30px Inter';
+            ctx.fillText('This certifies that', canvas.width / 2, 280);
+
+            // User name
+            ctx.font = 'bold 70px Inter';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText(userName, canvas.width / 2, 400);
+
+            // Achievement text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '30px Inter';
+            ctx.fillText('has successfully completed', canvas.width / 2, 480);
+
+            ctx.font = 'bold 45px Inter';
+            ctx.fillText('QA Engineering Playbook', canvas.width / 2, 560);
+
+            ctx.font = '25px Inter';
+            ctx.fillText(`${modules.length} Modules • 50+ Lessons • Comprehensive Curriculum`, canvas.width / 2, 620);
+
+            // Date and signature line
+            const completionDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            ctx.font = '20px Inter';
+            ctx.fillText(`Completed on ${completionDate}`, canvas.width / 2, 720);
+
+            // Decorative line
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(400, 760);
+            ctx.lineTo(800, 760);
+            ctx.stroke();
+
+            ctx.font = 'italic 18px Inter';
+            ctx.fillText('QA Engineering Playbook Certification', canvas.width / 2, 790);
+
+            // Trophy emoji (text)
+            ctx.font = '80px Arial';
+            ctx.fillText('🏆', canvas.width / 2, 140);
+
+            // Show and download
+            showCertificatePreview(canvas, 'QA-Engineering-Playbook-Certificate');
+        }
+
+        function createModuleCertificate(userName, module) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1200;
+            canvas.height = 900;
+            const ctx = canvas.getContext('2d');
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#8b5cf6');
+            gradient.addColorStop(1, '#6d28d9');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Border
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+
+            // Inner border
+            ctx.strokeStyle = '#c4b5fd';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+
+            // Certificate text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 50px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('MODULE COMPLETION CERTIFICATE', canvas.width / 2, 180);
+
+            ctx.font = '28px Inter';
+            ctx.fillText('This certifies that', canvas.width / 2, 260);
+
+            // User name
+            ctx.font = 'bold 60px Inter';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText(userName, canvas.width / 2, 360);
+
+            // Achievement text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '28px Inter';
+            ctx.fillText('has successfully completed the module', canvas.width / 2, 440);
+
+            // Module title (handle long titles)
+            ctx.font = 'bold 40px Inter';
+            const maxWidth = canvas.width - 200;
+            const words = module.title.split(' ');
+            let line = '';
+            let y = 520;
+
+            for (let word of words) {
+                const testLine = line + word + ' ';
+                const metrics = ctx.measureText(testLine);
+
+                if (metrics.width > maxWidth && line !== '') {
+                    ctx.fillText(line, canvas.width / 2, y);
+                    line = word + ' ';
+                    y += 50;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, canvas.width / 2, y);
+
+            // Module stats
+            ctx.font = '22px Inter';
+            ctx.fillText(`${module.lessons} lessons completed`, canvas.width / 2, y + 80);
+
+            // Date
+            const completionDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            ctx.font = '20px Inter';
+            ctx.fillText(`Completed on ${completionDate}`, canvas.width / 2, y + 150);
+
+            // Decorative line
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(400, y + 190);
+            ctx.lineTo(800, y + 190);
+            ctx.stroke();
+
+            ctx.font = 'italic 18px Inter';
+            ctx.fillText('QA Engineering Playbook', canvas.width / 2, y + 220);
+
+            // Badge emoji
+            ctx.font = '70px Arial';
+            ctx.fillText('📜', canvas.width / 2, 140);
+
+            // Show and download
+            const fileName = `${module.title.replace(/[^a-zA-Z0-9]/g, '-')}-Certificate`;
+            showCertificatePreview(canvas, fileName);
+        }
+
+        function showCertificatePreview(canvas, fileName) {
+            const modal = document.getElementById('certificateModal');
+            const preview = document.getElementById('certificatePreview');
+
+            const imageUrl = canvas.toDataURL('image/png');
+
+            preview.innerHTML = `
+                <h2 style="text-align: center; margin-bottom: 2rem;">Your Certificate is Ready! 🎉</h2>
+
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <img src="${imageUrl}" style="max-width: 100%; border: 2px solid var(--gray-light); border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);" alt="Certificate">
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn btn-primary" onclick="downloadCertificate('${imageUrl}', '${fileName}')">
+                        📥 Download Certificate
+                    </button>
+                    <button class="btn btn-outline" onclick="closeCertificateModal()">
+                        Close
+                    </button>
+                </div>
+
+                <p style="text-align: center; color: var(--gray); margin-top: 2rem; font-size: 0.95rem;">
+                    💡 Tip: Share your certificate on LinkedIn to showcase your achievement!
+                </p>
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function downloadCertificate(imageUrl, fileName) {
+            const link = document.createElement('a');
+            link.download = `${fileName}.png`;
+            link.href = imageUrl;
+            link.click();
+        }
+
+        function closeCertificateModal() {
+            document.getElementById('certificateModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

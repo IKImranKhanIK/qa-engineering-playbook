@@ -236,6 +236,30 @@ const templates = [
         description: "8D methodology for root cause analysis and CAPA",
         icon: "🔍",
         file: "templates/8d-root-cause-analysis.md"
+    },
+    {
+        title: "API Test Checklist",
+        description: "Comprehensive API testing checklist covering all aspects",
+        icon: "🔌",
+        file: "templates/api-test-checklist.md"
+    },
+    {
+        title: "Security Test Checklist",
+        description: "OWASP Top 10 and comprehensive security testing checklist",
+        icon: "🔒",
+        file: "templates/security-test-checklist.md"
+    },
+    {
+        title: "Test Automation Strategy",
+        description: "Complete automation strategy and implementation plan",
+        icon: "🤖",
+        file: "templates/automation-strategy.md"
+    },
+    {
+        title: "Performance Test Plan",
+        description: "Load, stress, and soak testing plan template",
+        icon: "⚡",
+        file: "templates/performance-test-plan.md"
     }
 ];
 
@@ -246,70 +270,80 @@ const labs = [
         description: "Test a sample e-commerce application for functional bugs",
         difficulty: "beginner",
         duration: "2 hours",
-        category: "software"
+        category: "software",
+        file: "labs/01-web-application-testing.md"
     },
     {
         title: "API Test Automation",
         description: "Build automated tests for a REST API using Postman/Newman",
         difficulty: "intermediate",
         duration: "3 hours",
-        category: "automation"
+        category: "automation",
+        file: "labs/02-api-test-automation.md"
     },
     {
         title: "Performance Testing Lab",
         description: "Load test a web application and analyze bottlenecks",
         difficulty: "intermediate",
         duration: "4 hours",
-        category: "software"
+        category: "software",
+        file: "labs/03-performance-testing-lab.md"
     },
     {
         title: "Security Testing Exercise",
         description: "Test for OWASP Top 10 vulnerabilities in a vulnerable app",
         difficulty: "advanced",
         duration: "4 hours",
-        category: "software"
+        category: "software",
+        file: "labs/04-security-testing-exercise.md"
     },
     {
         title: "Mobile Testing Scenarios",
         description: "Test mobile app across different devices and OS versions",
         difficulty: "intermediate",
         duration: "3 hours",
-        category: "software"
+        category: "software",
+        file: "labs/05-mobile-testing-scenarios.md"
     },
     {
         title: "Hardware Validation Exercise",
         description: "Paper-based EVT validation exercise for a smart device",
         difficulty: "intermediate",
         duration: "2 hours",
-        category: "hardware"
+        category: "hardware",
+        file: "labs/06-hardware-validation-exercise.md"
     },
     {
         title: "Environmental Testing Planning",
         description: "Design environmental test plan for consumer electronics",
         difficulty: "advanced",
         duration: "3 hours",
-        category: "hardware"
+        category: "hardware",
+        file: "labs/07-environmental-testing-planning.md"
     },
     {
         title: "Root Cause Analysis (8D)",
         description: "Conduct 8D analysis on a sample hardware failure",
         difficulty: "intermediate",
         duration: "2 hours",
-        category: "hardware"
+        category: "hardware",
+        file: "labs/08-root-cause-analysis-8d.md"
     },
     {
         title: "System Integration Testing",
         description: "Test IoT device integration with mobile app and cloud",
         difficulty: "advanced",
         duration: "4 hours",
-        category: "systems"
+        category: "systems",
+        file: "labs/09-system-integration-testing.md"
     },
     {
         title: "CI/CD Pipeline Integration",
         description: "Add automated tests to a CI/CD pipeline",
         difficulty: "intermediate",
         duration: "3 hours",
-        category: "automation"
+        category: "automation",
+        file: "labs/10-cicd-pipeline-integration.md"
     }
 ];
 
@@ -330,7 +364,141 @@ document.addEventListener('DOMContentLoaded', () => {
     setupModal();
     setupThemeToggle();
     updateProgressDisplay();
+    setupKeyboardShortcuts();
 });
+
+// Keyboard Shortcuts
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + K: Focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            const searchInput = document.getElementById('moduleSearch') ||
+                               document.getElementById('glossarySearch');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+            }
+        }
+
+        // Ctrl/Cmd + Shift + D: Toggle dark mode
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+            e.preventDefault();
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.click();
+            }
+        }
+
+        // Arrow keys for lesson navigation
+        if (window.location.pathname.includes('lesson.html')) {
+            // Left arrow: Previous lesson
+            if (e.key === 'ArrowLeft' && !e.target.matches('input, textarea')) {
+                const prevButton = document.querySelector('a[href*="lesson.html"]:has-text("Previous")') ||
+                                 document.querySelector('.btn:contains("Previous")');
+                if (prevButton) {
+                    window.location.href = prevButton.href;
+                }
+            }
+
+            // Right arrow: Next lesson
+            if (e.key === 'ArrowRight' && !e.target.matches('input, textarea')) {
+                const nextButtons = document.querySelectorAll('a[href*="lesson.html"]');
+                const nextButton = Array.from(nextButtons).find(btn =>
+                    btn.textContent.includes('Next') || btn.textContent.includes('→')
+                );
+                if (nextButton) {
+                    window.location.href = nextButton.href;
+                }
+            }
+
+            // M: Mark complete
+            if (e.key === 'm' && !e.target.matches('input, textarea')) {
+                const markCompleteBtn = document.querySelector('button[onclick*="toggleLessonComplete"]');
+                if (markCompleteBtn) {
+                    markCompleteBtn.click();
+                }
+            }
+        }
+
+        // ?: Show keyboard shortcuts help
+        if (e.key === '?' && !e.target.matches('input, textarea')) {
+            e.preventDefault();
+            showKeyboardShortcutsHelp();
+        }
+
+        // Escape: Close modals
+        if (e.key === 'Escape') {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (modal.style.display === 'block') {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    });
+}
+
+function showKeyboardShortcutsHelp() {
+    const helpContent = `
+        <div class="shortcuts-help">
+            <h2>⌨️ Keyboard Shortcuts</h2>
+            <div class="shortcuts-grid">
+                <div class="shortcut-item">
+                    <kbd>Ctrl/Cmd + K</kbd>
+                    <span>Focus search</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>Ctrl/Cmd + Shift + D</kbd>
+                    <span>Toggle dark mode</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>←</kbd>
+                    <span>Previous lesson</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>→</kbd>
+                    <span>Next lesson</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>M</kbd>
+                    <span>Mark lesson complete</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>?</kbd>
+                    <span>Show this help</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>Esc</kbd>
+                    <span>Close modals</span>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 2rem; color: var(--gray);">
+                Press <kbd>Esc</kbd> to close this dialog
+            </p>
+        </div>
+    `;
+
+    // Create or use existing modal
+    let modal = document.getElementById('shortcutsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'shortcutsModal';
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content">${helpContent}</div>`;
+        document.body.appendChild(modal);
+    } else {
+        modal.querySelector('.modal-content').innerHTML = helpContent;
+    }
+
+    modal.style.display = 'block';
+
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+}
 
 function loadModules() {
     const grid = document.getElementById('modulesGrid');
@@ -342,6 +510,7 @@ function loadModules() {
 
         const card = document.createElement('div');
         card.className = 'module-card';
+        card.setAttribute('data-tags', module.tags.join(' '));
         // Navigate to module.html instead of showing modal
         card.onclick = () => window.location.href = `module.html?id=${module.id}`;
 
@@ -873,4 +1042,122 @@ function setupThemeToggle() {
 
 function updateThemeIcon(theme, iconElement) {
     iconElement.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+// ===================================
+// PWA & Service Worker
+// ===================================
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+                console.log('✅ Service Worker registered:', registration.scope);
+
+                // Check for updates periodically
+                setInterval(() => {
+                    registration.update();
+                }, 60000); // Check every minute
+            })
+            .catch((error) => {
+                console.log('❌ Service Worker registration failed:', error);
+            });
+    });
+}
+
+// PWA Install Prompt
+let deferredPrompt;
+const installButton = document.createElement('button');
+installButton.className = 'pwa-install-button';
+installButton.innerHTML = '📱 Install App';
+installButton.style.display = 'none';
+
+// Listen for install prompt
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing
+    e.preventDefault();
+    // Save the event so it can be triggered later
+    deferredPrompt = e;
+    // Show install button
+    showInstallButton();
+});
+
+function showInstallButton() {
+    // Don't show if already installed or dismissed
+    if (localStorage.getItem('pwaInstallDismissed') === 'true') {
+        return;
+    }
+
+    document.body.appendChild(installButton);
+    installButton.style.display = 'block';
+
+    installButton.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+
+        // Show the install prompt
+        deferredPrompt.prompt();
+
+        // Wait for the user's response
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to install prompt: ${outcome}`);
+
+        if (outcome === 'accepted') {
+            console.log('✅ PWA installed');
+        }
+
+        // Clear the deferred prompt
+        deferredPrompt = null;
+        installButton.style.display = 'none';
+    });
+
+    // Add close button
+    const closeButton = document.createElement('span');
+    closeButton.innerHTML = '×';
+    closeButton.className = 'pwa-close';
+    closeButton.onclick = (e) => {
+        e.stopPropagation();
+        installButton.style.display = 'none';
+        localStorage.setItem('pwaInstallDismissed', 'true');
+    };
+    installButton.appendChild(closeButton);
+}
+
+// Detect if app is running as PWA
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    console.log('✅ Running as PWA');
+    // Add a class to body for PWA-specific styling
+    document.body.classList.add('pwa-mode');
+}
+
+// Online/Offline detection
+window.addEventListener('online', () => {
+    showNotification('✅ Back online!', 'success');
+    // Trigger background sync if available
+    if ('serviceWorker' in navigator && 'sync' in self.registration) {
+        navigator.serviceWorker.ready.then((registration) => {
+            return registration.sync.register('sync-progress');
+        });
+    }
+});
+
+window.addEventListener('offline', () => {
+    showNotification('📴 You are offline. Cached content is still available.', 'info');
+});
+
+// Show notification helper
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `pwa-notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }

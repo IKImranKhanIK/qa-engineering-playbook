@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - QA Engineering Playbook</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Quiz Container -->
+    <section class="content-section">
+        <div class="container" style="max-width: 800px;">
+            <div id="quizContainer"></div>
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.6"></script>
+    <script src="quizzes.js"></script>
+    <script>
+        let currentModuleId;
+        let currentQuiz;
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let score = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentModuleId = parseInt(urlParams.get('module'));
+
+            if (isNaN(currentModuleId) || !quizzes[currentModuleId]) {
+                window.location.href = 'modules.html';
+                return;
+            }
+
+            currentQuiz = quizzes[currentModuleId];
+            displayQuestion();
+        });
+
+        function displayQuestion() {
+            const container = document.getElementById('quizContainer');
+            const question = currentQuiz.questions[currentQuestion];
+            const totalQuestions = currentQuiz.questions.length;
+
+            container.innerHTML = `
+                <div class="quiz-header">
+                    <a href="module.html?id=${currentModuleId}" class="btn btn-outline btn-small">← Back to Module</a>
+                    <h1>${currentQuiz.title}</h1>
+                    <div class="quiz-progress-bar">
+                        <div class="quiz-progress-fill" style="width: ${((currentQuestion) / totalQuestions) * 100}%"></div>
+                    </div>
+                    <p class="quiz-counter">Question ${currentQuestion + 1} of ${totalQuestions}</p>
+                </div>
+
+                <div class="quiz-question-card">
+                    <h2 class="quiz-question">${question.question}</h2>
+
+                    <div class="quiz-options">
+                        ${question.options.map((option, index) => `
+                            <button
+                                class="quiz-option"
+                                onclick="selectAnswer(${index})"
+                                id="option-${index}"
+                            >
+                                <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+                                <span class="option-text">${option}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div id="feedback" class="quiz-feedback" style="display: none;"></div>
+
+                    <div class="quiz-actions" id="quizActions" style="display: none;">
+                        <button class="btn btn-primary" onclick="nextQuestion()">
+                            ${currentQuestion < totalQuestions - 1 ? 'Next Question →' : 'See Results'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectAnswer(answerIndex) {
+            const question = currentQuiz.questions[currentQuestion];
+            const isCorrect = answerIndex === question.correct;
+
+            // Disable all options
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((option, index) => {
+                option.disabled = true;
+                option.classList.remove('selected');
+
+                // Highlight correct and incorrect answers
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === answerIndex && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            // Store answer
+            userAnswers[currentQuestion] = answerIndex;
+            if (isCorrect) score++;
+
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            feedback.style.display = 'block';
+            feedback.className = `quiz-feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = `
+                <div class="feedback-icon">${isCorrect ? '✅' : '❌'}</div>
+                <div class="feedback-content">
+                    <strong>${isCorrect ? 'Correct!' : 'Incorrect'}</strong>
+                    <p>${question.explanation}</p>
+                </div>
+            `;
+
+            // Show next button
+            document.getElementById('quizActions').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+
+            if (currentQuestion < currentQuiz.questions.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const container = document.getElementById('quizContainer');
+            const total = currentQuiz.questions.length;
+            const percentage = Math.round((score / total) * 100);
+
+            // Save progress
+            saveQuizProgress(currentModuleId, score, total);
+
+            // Determine message and color based on score
+            let message, emoji, colorClass;
+            if (percentage >= 90) {
+                message = "Outstanding! You've mastered this module!";
+                emoji = "🏆";
+                colorClass = "excellent";
+            } else if (percentage >= 70) {
+                message = "Great job! You have a solid understanding.";
+                emoji = "🎉";
+                colorClass = "good";
+            } else if (percentage >= 50) {
+                message = "Good effort! Review the lessons and try again.";
+                emoji = "📚";
+                colorClass = "fair";
+            } else {
+                message = "Keep learning! Review the module and retake the quiz.";
+                emoji = "💪";
+                colorClass = "needs-improvement";
+            }
+
+            container.innerHTML = `
+                <div class="quiz-results ${colorClass}">
+                    <div class="results-header">
+                        <div class="results-emoji">${emoji}</div>
+                        <h1>Quiz Complete!</h1>
+                        <p>${message}</p>
+                    </div>
+
+                    <div class="results-score">
+                        <div class="score-circle">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="10"></circle>
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="10"
+                                    stroke-dasharray="${percentage * 2.827}, 282.7"
+                                    stroke-linecap="round"
+                                    transform="rotate(-90 50 50)"></circle>
+                            </svg>
+                            <div class="score-text">
+                                <div class="score-number">${percentage}%</div>
+                                <div class="score-label">${score}/${total}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-breakdown">
+                        <h3>Question Breakdown</h3>
+                        ${currentQuiz.questions.map((q, index) => {
+                            const userAnswer = userAnswers[index];
+                            const isCorrect = userAnswer === q.correct;
+                            return `
+                                <div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                                    <div class="result-icon">${isCorrect ? '✅' : '❌'}</div>
+                                    <div class="result-content">
+                                        <p><strong>Q${index + 1}:</strong> ${q.question}</p>
+                                        ${!isCorrect ? `
+                                            <p class="result-answer">
+                                                Your answer: ${q.options[userAnswer]}<br>
+                                                Correct answer: ${q.options[q.correct]}
+                                            </p>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div class="results-actions">
+                        <a href="module.html?id=${currentModuleId}" class="btn btn-outline">Back to Module</a>
+                        <button class="btn btn-primary" onclick="location.reload()">Retake Quiz</button>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

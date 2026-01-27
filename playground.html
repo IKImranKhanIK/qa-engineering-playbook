@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Playground - QA Engineering Playbook</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header" style="padding: 2rem 0;">
+        <div class="container">
+            <h1>💻 Code Playground</h1>
+            <p>Write, test, and experiment with code examples in real-time</p>
+        </div>
+    </section>
+
+    <!-- Playground Content -->
+    <section class="content-section" style="padding-top: 1rem;">
+        <div class="playground-container">
+            <!-- Controls -->
+            <div class="playground-controls">
+                <div class="language-selector">
+                    <button class="lang-btn active" data-lang="javascript" onclick="switchLanguage('javascript')">
+                        JavaScript
+                    </button>
+                    <button class="lang-btn" data-lang="html" onclick="switchLanguage('html')">
+                        HTML/CSS
+                    </button>
+                    <button class="lang-btn" data-lang="python" onclick="switchLanguage('python')">
+                        Python
+                    </button>
+                </div>
+
+                <div class="playground-actions">
+                    <button class="btn btn-primary" onclick="runCode()">▶️ Run Code</button>
+                    <button class="btn btn-outline" onclick="clearOutput()">🗑️ Clear</button>
+                    <button class="btn btn-outline" onclick="resetCode()">↻ Reset</button>
+                    <button class="btn btn-outline" onclick="shareCode()">📤 Share</button>
+                </div>
+            </div>
+
+            <!-- Editor & Output -->
+            <div class="playground-editor-container">
+                <!-- Code Editor -->
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <span id="editorLabel">JavaScript Code</span>
+                        <div class="editor-tools">
+                            <button class="tool-btn" onclick="formatCode()" title="Format Code">
+                                🎨
+                            </button>
+                            <button class="tool-btn" onclick="copyCode()" title="Copy Code">
+                                📋
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="codeEditor" class="code-editor" spellcheck="false"></textarea>
+                </div>
+
+                <!-- Output Panel -->
+                <div class="output-panel">
+                    <div class="panel-header">
+                        <span>Output</span>
+                        <span id="executionTime" class="execution-time"></span>
+                    </div>
+                    <div id="output" class="output-content"></div>
+                </div>
+            </div>
+
+            <!-- Examples -->
+            <div class="playground-examples">
+                <h3>📚 Quick Examples</h3>
+                <div class="examples-grid" id="examplesGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.6"></script>
+    <script>
+        let currentLanguage = 'javascript';
+
+        const examples = {
+            javascript: [
+                {
+                    title: 'Hello World',
+                    code: `console.log('Hello, QA Playground!');
+
+// Test a simple function
+function greet(name) {
+    return \`Hello, \${name}!\`;
+}
+
+console.log(greet('QA Engineer'));`
+                },
+                {
+                    title: 'Array Operations',
+                    code: `// Test data
+const users = [
+    { name: 'Alice', role: 'QA' },
+    { name: 'Bob', role: 'Dev' },
+    { name: 'Charlie', role: 'QA' }
+];
+
+// Filter QA engineers
+const qaEngineers = users.filter(u => u.role === 'QA');
+console.log('QA Engineers:', qaEngineers);
+
+// Map names
+const names = users.map(u => u.name);
+console.log('Names:', names);`
+                },
+                {
+                    title: 'API Response Validation',
+                    code: `// Mock API response
+const apiResponse = {
+    status: 200,
+    data: {
+        id: 123,
+        name: 'Test User',
+        email: 'test@example.com'
+    }
+};
+
+// Validation function
+function validateResponse(response) {
+    const checks = {
+        'Status is 200': response.status === 200,
+        'Has data': !!response.data,
+        'Has id': !!response.data?.id,
+        'Has valid email': /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(response.data?.email)
+    };
+
+    console.log('Validation Results:');
+    Object.entries(checks).forEach(([check, passed]) => {
+        console.log(\`  \${passed ? '✅' : '❌'} \${check}\`);
+    });
+}
+
+validateResponse(apiResponse);`
+                }
+            ],
+            html: [
+                {
+                    title: 'Simple Page',
+                    code: `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .card {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Hello from the Playground!</h1>
+        <p>This is a test page rendered in an iframe.</p>
+    </div>
+</body>
+</html>`
+                },
+                {
+                    title: 'Interactive Button',
+                    code: `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="alert('Button clicked!')">Click Me!</button>
+</body>
+</html>`
+                },
+                {
+                    title: 'Responsive Layout',
+                    code: `<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Responsive Grid</h1>
+    <div class="grid">
+        <div class="box">Box 1</div>
+        <div class="box">Box 2</div>
+        <div class="box">Box 3</div>
+    </div>
+</body>
+</html>`
+                }
+            ],
+            python: [
+                {
+                    title: 'Hello World',
+                    code: `print("Hello, QA Playground!")
+
+# Test a simple function
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("QA Engineer"))`
+                },
+                {
+                    title: 'List Operations',
+                    code: `# Test data
+users = [
+    {"name": "Alice", "role": "QA"},
+    {"name": "Bob", "role": "Dev"},
+    {"name": "Charlie", "role": "QA"}
+]
+
+# Filter QA engineers
+qa_engineers = [u for u in users if u["role"] == "QA"]
+print("QA Engineers:", qa_engineers)
+
+# Get names
+names = [u["name"] for u in users]
+print("Names:", names)`
+                },
+                {
+                    title: 'Test Assertions',
+                    code: `# Test assertions example
+def test_calculator():
+    # Test addition
+    result = 2 + 2
+    assert result == 4, f"Expected 4, got {result}"
+    print("✅ Addition test passed")
+
+    # Test multiplication
+    result = 5 * 3
+    assert result == 15, f"Expected 15, got {result}"
+    print("✅ Multiplication test passed")
+
+    # Test division
+    result = 10 / 2
+    assert result == 5, f"Expected 5, got {result}"
+    print("✅ Division test passed")
+
+test_calculator()
+print("\\n🎉 All tests passed!")`
+                }
+            ]
+        };
+
+        const defaultCode = {
+            javascript: `// Write your JavaScript code here
+console.log('Welcome to the QA Playground!');
+
+// Example: Test a function
+function sum(a, b) {
+    return a + b;
+}
+
+console.log('2 + 3 =', sum(2, 3));`,
+            html: `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello from HTML!</h1>
+    <p>Edit the HTML and see the changes in real-time.</p>
+</body>
+</html>`,
+            python: `# Write your Python code here
+print("Welcome to the Python Playground!")
+
+# Example: Test a function
+def sum_numbers(a, b):
+    return a + b
+
+print(f"2 + 3 = {sum_numbers(2, 3)}")`
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDefaultCode();
+            loadExamples();
+        });
+
+        function loadDefaultCode() {
+            document.getElementById('codeEditor').value = defaultCode[currentLanguage];
+        }
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // Update editor label
+            const labels = {
+                javascript: 'JavaScript Code',
+                html: 'HTML Code',
+                python: 'Python Code'
+            };
+            document.getElementById('editorLabel').textContent = labels[lang];
+
+            // Load default code
+            if (!document.getElementById('codeEditor').value.trim()) {
+                loadDefaultCode();
+            }
+
+            // Load examples
+            loadExamples();
+
+            // Clear output
+            clearOutput();
+        }
+
+        function loadExamples() {
+            const grid = document.getElementById('examplesGrid');
+            grid.innerHTML = examples[currentLanguage].map((example, index) => `
+                <button class="example-card" onclick="loadExample(${index})">
+                    <span class="example-icon">📝</span>
+                    <span class="example-title">${example.title}</span>
+                </button>
+            `).join('');
+        }
+
+        function loadExample(index) {
+            const example = examples[currentLanguage][index];
+            document.getElementById('codeEditor').value = example.code;
+            clearOutput();
+        }
+
+        function runCode() {
+            const code = document.getElementById('codeEditor').value;
+            const output = document.getElementById('output');
+            const startTime = performance.now();
+
+            clearOutput();
+
+            if (currentLanguage === 'javascript') {
+                runJavaScript(code, output);
+            } else if (currentLanguage === 'html') {
+                runHTML(code, output);
+            } else if (currentLanguage === 'python') {
+                runPython(code, output);
+            }
+
+            const endTime = performance.now();
+            document.getElementById('executionTime').textContent =
+                `⏱️ ${(endTime - startTime).toFixed(2)}ms`;
+        }
+
+        function runJavaScript(code, output) {
+            const originalLog = console.log;
+            const logs = [];
+
+            console.log = function(...args) {
+                logs.push(args.map(arg =>
+                    typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+                ).join(' '));
+            };
+
+            try {
+                eval(code);
+                output.innerHTML = logs.map(log =>
+                    `<div class="output-line">${escapeHtml(log)}</div>`
+                ).join('');
+
+                if (logs.length === 0) {
+                    output.innerHTML = '<div class="output-info">✅ Code executed successfully (no output)</div>';
+                }
+            } catch (error) {
+                output.innerHTML = `<div class="output-error">❌ Error: ${escapeHtml(error.message)}</div>`;
+            } finally {
+                console.log = originalLog;
+            }
+        }
+
+        function runHTML(code, output) {
+            const iframe = document.createElement('iframe');
+            iframe.className = 'html-preview';
+            output.appendChild(iframe);
+
+            iframe.contentDocument.open();
+            iframe.contentDocument.write(code);
+            iframe.contentDocument.close();
+        }
+
+        function runPython(code, output) {
+            // Note: This is a simplified Python interpreter simulation
+            // In a real implementation, you'd use Pyodide or Skulpt
+            output.innerHTML = `
+                <div class="output-info">
+                    ℹ️ Python execution requires a Python interpreter.<br>
+                    This is a demonstration mode. In a production environment,
+                    use Pyodide or Skulpt for real Python execution.
+                </div>
+                <div class="output-line">>> ${escapeHtml(code)}</div>
+            `;
+        }
+
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('executionTime').textContent = '';
+        }
+
+        function resetCode() {
+            if (confirm('Reset to default code? Your current code will be lost.')) {
+                document.getElementById('codeEditor').value = defaultCode[currentLanguage];
+                clearOutput();
+            }
+        }
+
+        function formatCode() {
+            const editor = document.getElementById('codeEditor');
+            const code = editor.value;
+
+            // Basic formatting (indentation)
+            const lines = code.split('\n');
+            let indentLevel = 0;
+            const formatted = lines.map(line => {
+                const trimmed = line.trim();
+
+                if (trimmed.endsWith('{') || trimmed.endsWith('[') || trimmed.endsWith('(')) {
+                    const result = '    '.repeat(indentLevel) + trimmed;
+                    indentLevel++;
+                    return result;
+                } else if (trimmed.startsWith('}') || trimmed.startsWith(']') || trimmed.startsWith(')')) {
+                    indentLevel = Math.max(0, indentLevel - 1);
+                    return '    '.repeat(indentLevel) + trimmed;
+                } else {
+                    return '    '.repeat(indentLevel) + trimmed;
+                }
+            }).join('\n');
+
+            editor.value = formatted;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeEditor').value;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Code copied to clipboard!');
+            });
+        }
+
+        function shareCode() {
+            const code = document.getElementById('codeEditor').value;
+            const encoded = btoa(encodeURIComponent(code));
+            const url = `${window.location.origin}${window.location.pathname}?code=${encoded}&lang=${currentLanguage}`;
+
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ Share link copied to clipboard!');
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load shared code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('code')) {
+            try {
+                const code = decodeURIComponent(atob(urlParams.get('code')));
+                const lang = urlParams.get('lang') || 'javascript';
+                currentLanguage = lang;
+                document.getElementById('codeEditor').value = code;
+                switchLanguage(lang);
+            } catch (error) {
+                console.error('Failed to load shared code:', error);
+            }
+        }
+    </script>
+</body>
+</html>

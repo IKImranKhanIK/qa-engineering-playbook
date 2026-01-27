@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lesson - QA Engineering Playbook</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
@@ -29,8 +32,43 @@
         </div>
     </section>
 
+    <!-- Notes & Bookmarks Panel -->
+    <button class="notes-toggle" id="notesToggle" title="Toggle Notes & Bookmarks">
+        📝
+    </button>
+
+    <div class="notes-panel" id="notesPanel">
+        <div class="notes-header">
+            <h3>Notes & Bookmarks</h3>
+            <button class="close-panel" onclick="toggleNotesPanel()">×</button>
+        </div>
+
+        <div class="notes-tabs">
+            <button class="notes-tab active" onclick="switchTab('notes')">📝 Notes</button>
+            <button class="notes-tab" onclick="switchTab('bookmarks')">🔖 Bookmarks</button>
+        </div>
+
+        <div id="notesTab" class="tab-content">
+            <textarea
+                id="lessonNotes"
+                placeholder="Take notes for this lesson..."
+                class="notes-textarea"
+            ></textarea>
+            <button class="btn btn-primary btn-small" onclick="saveNotes()" style="margin-top: 1rem; width: 100%;">
+                Save Notes
+            </button>
+        </div>
+
+        <div id="bookmarksTab" class="tab-content" style="display: none;">
+            <button class="btn btn-primary btn-small" onclick="toggleBookmark()" id="bookmarkBtn" style="width: 100%; margin-bottom: 1rem;">
+                🔖 Bookmark This Lesson
+            </button>
+            <div id="bookmarksList"></div>
+        </div>
+    </div>
+
     <script src="nav.js"></script>
-    <script src="app.js?v=2.3"></script>
+    <script src="app.js?v=2.6"></script>
     <script>
         let currentModuleId, currentLessonId;
 
@@ -52,6 +90,9 @@
 
             loadLesson(module, currentLessonId);
             setupReadingProgress();
+            setupNotesPanel();
+            loadNotes();
+            loadBookmarks();
         });
 
         async function loadLesson(module, lessonIndex) {
@@ -134,6 +175,12 @@
                 delete progress.lessons[lessonKey];
             } else {
                 progress.lessons[lessonKey] = true;
+
+                // Track completion date for streak
+                if (!progress.completionDates) {
+                    progress.completionDates = [];
+                }
+                progress.completionDates.push(new Date().toISOString());
             }
 
             // Update module progress
@@ -159,6 +206,120 @@
                 const scrollPercent = (scrollTop / scrollHeight) * 100;
                 progressBar.style.width = scrollPercent + '%';
             });
+        }
+
+        // Notes & Bookmarks Functions
+        function setupNotesPanel() {
+            const toggle = document.getElementById('notesToggle');
+            toggle.addEventListener('click', toggleNotesPanel);
+        }
+
+        function toggleNotesPanel() {
+            const panel = document.getElementById('notesPanel');
+            panel.classList.toggle('open');
+        }
+
+        function switchTab(tab) {
+            const notesTab = document.getElementById('notesTab');
+            const bookmarksTab = document.getElementById('bookmarksTab');
+            const tabs = document.querySelectorAll('.notes-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (tab === 'notes') {
+                notesTab.style.display = 'block';
+                bookmarksTab.style.display = 'none';
+                tabs[0].classList.add('active');
+            } else {
+                notesTab.style.display = 'none';
+                bookmarksTab.style.display = 'block';
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function loadNotes() {
+            const lessonKey = `${currentModuleId}-${currentLessonId}`;
+            const notes = JSON.parse(localStorage.getItem('qaPlaybookNotes') || '{}');
+            const lessonNotes = notes[lessonKey] || '';
+
+            document.getElementById('lessonNotes').value = lessonNotes;
+        }
+
+        function saveNotes() {
+            const lessonKey = `${currentModuleId}-${currentLessonId}`;
+            const notes = JSON.parse(localStorage.getItem('qaPlaybookNotes') || '{}');
+            notes[lessonKey] = document.getElementById('lessonNotes').value;
+
+            localStorage.setItem('qaPlaybookNotes', JSON.stringify(notes));
+            alert('✅ Notes saved!');
+        }
+
+        function loadBookmarks() {
+            const bookmarks = JSON.parse(localStorage.getItem('qaPlaybookBookmarks') || '[]');
+            const lessonKey = `${currentModuleId}-${currentLessonId}`;
+
+            // Update bookmark button
+            const isBookmarked = bookmarks.some(b => b.key === lessonKey);
+            const btn = document.getElementById('bookmarkBtn');
+            btn.textContent = isBookmarked ? '🔖 Remove Bookmark' : '🔖 Bookmark This Lesson';
+
+            // Display all bookmarks
+            displayBookmarks();
+        }
+
+        function toggleBookmark() {
+            const bookmarks = JSON.parse(localStorage.getItem('qaPlaybookBookmarks') || '[]');
+            const lessonKey = `${currentModuleId}-${currentLessonId}`;
+            const module = modules.find(m => m.id === currentModuleId);
+            const lesson = module.lessons_list[currentLessonId];
+            const lessonTitle = (typeof lesson === 'object') ? lesson.title : lesson;
+
+            const existingIndex = bookmarks.findIndex(b => b.key === lessonKey);
+
+            if (existingIndex >= 0) {
+                // Remove bookmark
+                bookmarks.splice(existingIndex, 1);
+                alert('🔖 Bookmark removed');
+            } else {
+                // Add bookmark
+                bookmarks.push({
+                    key: lessonKey,
+                    moduleId: currentModuleId,
+                    lessonId: currentLessonId,
+                    moduleTitle: module.title,
+                    lessonTitle: lessonTitle,
+                    date: new Date().toISOString()
+                });
+                alert('✅ Lesson bookmarked!');
+            }
+
+            localStorage.setItem('qaPlaybookBookmarks', JSON.stringify(bookmarks));
+            loadBookmarks();
+        }
+
+        function displayBookmarks() {
+            const bookmarks = JSON.parse(localStorage.getItem('qaPlaybookBookmarks') || '[]');
+            const list = document.getElementById('bookmarksList');
+
+            if (bookmarks.length === 0) {
+                list.innerHTML = '<p style="color: var(--gray); text-align: center; padding: 2rem;">No bookmarks yet</p>';
+                return;
+            }
+
+            let html = '<div class="bookmarks-list">';
+            bookmarks.reverse().forEach(bookmark => {
+                html += `
+                    <div class="bookmark-item">
+                        <a href="lesson.html?module=${bookmark.moduleId}&lesson=${bookmark.lessonId}">
+                            <strong>${bookmark.lessonTitle}</strong>
+                            <span>${bookmark.moduleTitle}</span>
+                        </a>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            list.innerHTML = html;
         }
     </script>
 </body>

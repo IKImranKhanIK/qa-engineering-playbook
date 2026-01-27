@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Paths - QA Engineering Playbook</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="stylesheet" href="styles.css?v=2.6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>🗺️ Learning Paths</h1>
+            <p>Structured learning journeys tailored to your goals and experience level</p>
+        </div>
+    </section>
+
+    <!-- Learning Paths Content -->
+    <section class="content-section">
+        <div class="container" style="max-width: 1200px;">
+            <div id="learningPathsContent"></div>
+        </div>
+    </section>
+
+    <script src="nav.js"></script>
+    <script src="app.js?v=2.6"></script>
+    <script>
+        // Define learning paths
+        const learningPaths = [
+            {
+                id: 'beginner',
+                title: 'Beginner to QA Engineer',
+                description: 'Start your QA career from scratch. Learn fundamentals, manual testing, and basic automation.',
+                difficulty: 'Beginner',
+                duration: '8-12 weeks',
+                icon: '🌱',
+                color: '#10b981',
+                modules: [0, 1, 2, 3, 4],
+                recommended: true
+            },
+            {
+                id: 'automation',
+                title: 'Test Automation Specialist',
+                description: 'Master automation frameworks, CI/CD integration, and advanced testing techniques.',
+                difficulty: 'Intermediate',
+                duration: '10-14 weeks',
+                icon: '🤖',
+                color: '#3b82f6',
+                modules: [1, 2, 3, 4, 5, 7, 9]
+            },
+            {
+                id: 'mobile',
+                title: 'Mobile QA Engineer',
+                description: 'Specialize in mobile app testing for iOS and Android platforms.',
+                difficulty: 'Intermediate',
+                duration: '6-8 weeks',
+                icon: '📱',
+                color: '#8b5cf6',
+                modules: [0, 1, 6]
+            },
+            {
+                id: 'api',
+                title: 'API Testing Expert',
+                description: 'Deep dive into API testing, security, performance, and microservices.',
+                difficulty: 'Intermediate',
+                duration: '6-8 weeks',
+                icon: '🔌',
+                color: '#f59e0b',
+                modules: [1, 2, 4, 5, 7]
+            },
+            {
+                id: 'security',
+                title: 'Security Testing Professional',
+                description: 'Learn security testing, penetration testing, and vulnerability assessment.',
+                difficulty: 'Advanced',
+                duration: '8-10 weeks',
+                icon: '🔒',
+                color: '#ef4444',
+                modules: [1, 4, 5, 7, 8]
+            },
+            {
+                id: 'performance',
+                title: 'Performance Testing Specialist',
+                description: 'Master load testing, stress testing, and performance optimization.',
+                difficulty: 'Advanced',
+                duration: '6-8 weeks',
+                icon: '⚡',
+                color: '#ec4899',
+                modules: [1, 2, 4, 5, 7]
+            },
+            {
+                id: 'web',
+                title: 'Web Application Testing',
+                description: 'Comprehensive web testing including UI, accessibility, and cross-browser testing.',
+                difficulty: 'Intermediate',
+                duration: '8-10 weeks',
+                icon: '🌐',
+                color: '#06b6d4',
+                modules: [1, 2, 3, 4, 5]
+            },
+            {
+                id: 'sdet',
+                title: 'SDET Career Track',
+                description: 'Complete path to becoming a Software Development Engineer in Test.',
+                difficulty: 'Advanced',
+                duration: '16-20 weeks',
+                icon: '👨‍💻',
+                color: '#6366f1',
+                modules: [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayLearningPaths();
+        });
+
+        function displayLearningPaths() {
+            const container = document.getElementById('learningPathsContent');
+
+            // Get current path from localStorage
+            const currentPathId = localStorage.getItem('qaPlaybookCurrentPath');
+
+            container.innerHTML = `
+                ${currentPathId ? `
+                    <div class="current-path-banner">
+                        <div class="current-path-content">
+                            <span class="current-path-icon">🎯</span>
+                            <div>
+                                <h3>Currently Following: ${learningPaths.find(p => p.id === currentPathId)?.title}</h3>
+                                <p>Keep going! You're making great progress.</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" onclick="clearCurrentPath()">Change Path</button>
+                    </div>
+                ` : ''}
+
+                <div class="learning-paths-grid">
+                    ${learningPaths.map(path => {
+                        const pathProgress = calculatePathProgress(path);
+                        const isCurrentPath = currentPathId === path.id;
+
+                        return `
+                            <div class="learning-path-card ${isCurrentPath ? 'active-path' : ''} ${path.recommended ? 'recommended' : ''}"
+                                 style="border-left: 4px solid ${path.color};">
+                                ${path.recommended ? '<div class="recommended-badge">⭐ Recommended</div>' : ''}
+                                ${isCurrentPath ? '<div class="active-badge">📍 Active</div>' : ''}
+
+                                <div class="path-header">
+                                    <span class="path-icon" style="background: ${path.color}20; color: ${path.color};">${path.icon}</span>
+                                    <div>
+                                        <h3>${path.title}</h3>
+                                        <div class="path-meta">
+                                            <span class="difficulty-badge ${path.difficulty.toLowerCase()}">${path.difficulty}</span>
+                                            <span>⏱️ ${path.duration}</span>
+                                            <span>📚 ${path.modules.length} modules</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p class="path-description">${path.description}</p>
+
+                                <div class="path-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${pathProgress.percentage}%; background: ${path.color};"></div>
+                                    </div>
+                                    <p style="text-align: center; color: var(--gray); margin-top: 0.5rem; font-size: 0.9rem;">
+                                        ${pathProgress.completed} of ${pathProgress.total} modules completed (${pathProgress.percentage}%)
+                                    </p>
+                                </div>
+
+                                <div class="path-modules">
+                                    <h4>Modules in this path:</h4>
+                                    <div class="path-modules-list">
+                                        ${path.modules.map(moduleId => {
+                                            const module = modules.find(m => m.id === moduleId);
+                                            const completed = progress.modules[moduleId] || 0;
+                                            const isCompleted = completed === module.lessons;
+
+                                            return `
+                                                <div class="path-module-item ${isCompleted ? 'completed' : ''}">
+                                                    <span class="module-check">${isCompleted ? '✅' : '⭕'}</span>
+                                                    <a href="module.html?id=${moduleId}" class="module-link">
+                                                        ${module.title}
+                                                    </a>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="path-actions">
+                                    ${isCurrentPath ? `
+                                        <button class="btn btn-primary" onclick="continueNextLesson('${path.id}')" style="background: ${path.color};">
+                                            Continue Learning →
+                                        </button>
+                                    ` : `
+                                        <button class="btn btn-outline" onclick="startPath('${path.id}')">
+                                            Start This Path
+                                        </button>
+                                    `}
+                                    <button class="btn btn-outline btn-small" onclick="viewPathDetails('${path.id}')">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="custom-path-section">
+                    <h2>Want to Create Your Own Path?</h2>
+                    <p>Select specific modules that align with your learning goals and career aspirations.</p>
+                    <button class="btn btn-primary" onclick="createCustomPath()">
+                        Create Custom Path
+                    </button>
+                </div>
+            `;
+        }
+
+        function calculatePathProgress(path) {
+            let completedModules = 0;
+
+            path.modules.forEach(moduleId => {
+                const module = modules.find(m => m.id === moduleId);
+                const completed = progress.modules[moduleId] || 0;
+
+                if (completed === module.lessons) {
+                    completedModules++;
+                }
+            });
+
+            return {
+                completed: completedModules,
+                total: path.modules.length,
+                percentage: Math.round((completedModules / path.modules.length) * 100)
+            };
+        }
+
+        function startPath(pathId) {
+            localStorage.setItem('qaPlaybookCurrentPath', pathId);
+            const path = learningPaths.find(p => p.id === pathId);
+
+            // Find first incomplete module
+            const firstIncompleteModule = path.modules.find(moduleId => {
+                const module = modules.find(m => m.id === moduleId);
+                const completed = progress.modules[moduleId] || 0;
+                return completed < module.lessons;
+            });
+
+            if (firstIncompleteModule !== undefined) {
+                window.location.href = `module.html?id=${firstIncompleteModule}`;
+            } else {
+                displayLearningPaths();
+            }
+        }
+
+        function clearCurrentPath() {
+            if (confirm('Are you sure you want to change your learning path? Your progress will be saved.')) {
+                localStorage.removeItem('qaPlaybookCurrentPath');
+                displayLearningPaths();
+            }
+        }
+
+        function continueNextLesson(pathId) {
+            const path = learningPaths.find(p => p.id === pathId);
+
+            // Find next incomplete lesson
+            for (const moduleId of path.modules) {
+                const module = modules.find(m => m.id === moduleId);
+                const completed = progress.modules[moduleId] || 0;
+
+                if (completed < module.lessons) {
+                    // Find first incomplete lesson in this module
+                    for (let i = 0; i < module.lessons; i++) {
+                        const lessonKey = `${moduleId}-${i}`;
+                        if (!progress.lessons[lessonKey]) {
+                            window.location.href = `lesson.html?module=${moduleId}&lesson=${i}`;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // All lessons complete
+            alert('Congratulations! You\'ve completed this learning path! 🎉');
+        }
+
+        function viewPathDetails(pathId) {
+            const path = learningPaths.find(p => p.id === pathId);
+            const pathProgress = calculatePathProgress(path);
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <span class="modal-close" onclick="this.closest('.modal').remove()">&times;</span>
+
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <span style="font-size: 4rem;">${path.icon}</span>
+                        <h2 style="margin: 1rem 0;">${path.title}</h2>
+                        <p style="color: var(--gray);">${path.description}</p>
+                    </div>
+
+                    <div class="path-details-grid">
+                        <div class="detail-item">
+                            <strong>Difficulty</strong>
+                            <span class="difficulty-badge ${path.difficulty.toLowerCase()}">${path.difficulty}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Duration</strong>
+                            <span>${path.duration}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Modules</strong>
+                            <span>${path.modules.length} modules</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Your Progress</strong>
+                            <span>${pathProgress.percentage}% complete</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem;">What You'll Learn:</h3>
+                    <ul style="line-height: 2;">
+                        ${path.modules.map(moduleId => {
+                            const module = modules.find(m => m.id === moduleId);
+                            return `<li><strong>${module.title}:</strong> ${module.description}</li>`;
+                        }).join('')}
+                    </ul>
+
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn btn-primary" onclick="startPath('${path.id}')" style="background: ${path.color};">
+                            Start This Path
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+        }
+
+        function createCustomPath() {
+            alert('Custom path creator coming soon! For now, you can browse all modules and learn at your own pace.');
+            window.location.href = 'modules.html';
+        }
+    </script>
+</body>
+</html>
