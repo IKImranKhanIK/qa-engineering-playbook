@@ -1,26 +1,26 @@
 // Service Worker for QA Engineering Playbook
-const CACHE_NAME = 'qa-playbook-v2.6';
+const CACHE_NAME = 'qa-playbook-v2.9';
 const RUNTIME_CACHE = 'qa-playbook-runtime';
 
 // Files to cache immediately on install
 const PRECACHE_URLS = [
-    '/',
-    '/index.html',
-    '/modules.html',
-    '/learning-paths.html',
-    '/playground.html',
-    '/templates.html',
-    '/labs.html',
-    '/resources.html',
-    '/glossary.html',
-    '/progress.html',
-    '/certificates.html',
-    '/styles.css',
-    '/app.js',
-    '/nav.js',
-    '/quizzes.js',
-    '/manifest.json',
-    '/favicon.svg'
+    './',
+    './index.html',
+    './modules.html',
+    './learning-paths.html',
+    './playground.html',
+    './templates.html',
+    './labs.html',
+    './resources.html',
+    './glossary.html',
+    './progress.html',
+    './certificates.html',
+    './styles.css',
+    './app.js',
+    './nav.js',
+    './quizzes.js',
+    './manifest.json',
+    './favicon.svg'
 ];
 
 // Install event - cache essential files

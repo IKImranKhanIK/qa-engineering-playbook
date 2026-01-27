@@ -394,8 +394,10 @@ function setupKeyboardShortcuts() {
         if (window.location.pathname.includes('lesson.html')) {
             // Left arrow: Previous lesson
             if (e.key === 'ArrowLeft' && !e.target.matches('input, textarea')) {
-                const prevButton = document.querySelector('a[href*="lesson.html"]:has-text("Previous")') ||
-                                 document.querySelector('.btn:contains("Previous")');
+                const allLinks = document.querySelectorAll('a[href*="lesson.html"]');
+                const prevButton = Array.from(allLinks).find(btn =>
+                    btn.textContent.includes('Previous') || btn.textContent.includes('←')
+                );
                 if (prevButton) {
                     window.location.href = prevButton.href;
                 }
@@ -403,8 +405,8 @@ function setupKeyboardShortcuts() {
 
             // Right arrow: Next lesson
             if (e.key === 'ArrowRight' && !e.target.matches('input, textarea')) {
-                const nextButtons = document.querySelectorAll('a[href*="lesson.html"]');
-                const nextButton = Array.from(nextButtons).find(btn =>
+                const allLinks = document.querySelectorAll('a[href*="lesson.html"]');
+                const nextButton = Array.from(allLinks).find(btn =>
                     btn.textContent.includes('Next') || btn.textContent.includes('→')
                 );
                 if (nextButton) {
@@ -1051,7 +1053,7 @@ function updateThemeIcon(theme, iconElement) {
 // Register service worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then((registration) => {
                 console.log('✅ Service Worker registered:', registration.scope);
 

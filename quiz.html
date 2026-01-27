@@ -54,7 +54,7 @@
                     <a href="module.html?id=${currentModuleId}" class="btn btn-outline btn-small">← Back to Module</a>
                     <h1>${currentQuiz.title}</h1>
                     <div class="quiz-progress-bar">
-                        <div class="quiz-progress-fill" style="width: ${((currentQuestion) / totalQuestions) * 100}%"></div>
+                        <div class="quiz-progress-fill" style="width: ${((currentQuestion + 1) / totalQuestions) * 100}%"></div>
                     </div>
                     <p class="quiz-counter">Question ${currentQuestion + 1} of ${totalQuestions}</p>
                 </div>

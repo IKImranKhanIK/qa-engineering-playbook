@@ -613,6 +613,14 @@ body {
     color: var(--dark);
 }
 
+[data-theme="dark"] .close {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .close:hover {
+    color: #f9fafb;
+}
+
 #modalBody {
     margin-top: 2rem;
 }
@@ -1236,7 +1244,26 @@ body {
 [data-theme="dark"] #labBody td,
 [data-theme="dark"] #glossaryContent td {
     border-color: var(--gray);
-    color: var(--light);
+    color: var(--dark);
+}
+
+/* Dark mode - inline code */
+[data-theme="dark"] #modalBody code,
+[data-theme="dark"] .lesson-body code,
+[data-theme="dark"] #templateBody code,
+[data-theme="dark"] #labBody code {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #fff;
+}
+
+/* Dark mode - table headers */
+[data-theme="dark"] #modalBody th,
+[data-theme="dark"] .lesson-body th,
+[data-theme="dark"] #templateBody th,
+[data-theme="dark"] #labBody th,
+[data-theme="dark"] #glossaryContent th {
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    color: #fff;
 }
 
 /* Highlight boxes for important content */
