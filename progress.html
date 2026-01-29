@@ -233,6 +233,10 @@
             const width = canvas.width;
             const height = canvas.height;
 
+            // Check for dark mode
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#e5e7eb' : '#374151';
+
             // Clear canvas
             ctx.clearRect(0, 0, width, height);
 
@@ -257,7 +261,7 @@
                 ctx.fillRect(x, y, barWidth, barHeight);
 
                 // Draw percentage
-                ctx.fillStyle = '#374151';
+                ctx.fillStyle = textColor;
                 ctx.font = '10px Inter';
                 ctx.textAlign = 'center';
                 ctx.fillText(Math.round(percent) + '%', x + barWidth / 2, y - 5);

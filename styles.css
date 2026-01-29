@@ -1957,8 +1957,8 @@ body {
 }
 
 [data-theme="dark"] .search-input {
-    background: var(--dark-light);
-    color: var(--light);
+    background: var(--white);
+    color: var(--dark);
     border-color: var(--gray);
 }
 
