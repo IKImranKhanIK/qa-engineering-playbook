@@ -198,14 +198,10 @@ body {
     opacity: 0.8;
 }
 
-/* Dark mode - hero section text must stay white on gradient background */
-[data-theme="dark"] .hero {
-    color: #ffffff;
-}
-
-[data-theme="dark"] .hero .stat-number,
-[data-theme="dark"] .hero .stat-label {
-    color: #ffffff;
+/* Hero stats must stay white on gradient background (both modes) */
+.hero .stat-number,
+.hero .stat-label {
+    color: #ffffff !important;
 }
 
 .hero-cta {
